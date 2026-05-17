@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google 폰트: 고운돋움 및 Inter -->
+    <!-- Google 폰트: 고운돋움 및 Inter (주소 오류 복구 완료) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -34,12 +34,116 @@
         .animate-gentle-bounce {
             animation: gentle-bounce 2s infinite ease-in-out;
         }
+
+        /* =============================================================
+           ★ 초고화질 대형 화면 & 반응형 오토 스케일링 전용 CSS 규격 정의
+           ============================================================= */
+        .fluid-container {
+            height: calc(100vh - 90px); /* 헤더 및 여백 고려한 최적 뷰포트 영역 */
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            gap: 7vh; /* ★ 상태판과 하단 꾸미기 가이드 섹션 사이의 여백을 더 시원하게 확장 */
+        }
+        /* 실시간 상태 알림판의 반응형 크기 및 둥근 테두리 제약 */
+        .fluid-status-container {
+            border-radius: 2.25rem; /* 더 부드럽고 동글동글하게 강화 */
+            padding: 2.5vh 2vw;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-width: 2px;
+            transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            height: 23vh; /* 세로 높이를 기존 18vh에서 23vh로 높임 */
+            min-height: 130px; /* 최소 높이 상향 */
+            max-height: 200px; /* 최대 높이 확장으로 텍스트 넘침 원천 차단 */
+            width: 100%;
+            max-width: 100%;
+        }
+        /* 4단계 가이드 그리드 - 삐져나옴 방지 및 자동 축소 규격 */
+        .fluid-grid {
+            display: grid;
+            grid-template-cols: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            flex-grow: 1;
+            min-height: 0;
+            align-content: start;
+        }
+        @media (min-width: 1024px) {
+            .fluid-grid {
+                grid-template-cols: repeat(4, minmax(0, 1fr));
+                gap: 20px;
+            }
+        }
+        /* 안내 카드 - 빈 흰색 여백을 원천 차단하고 황금 비율을 고정하는 밀착형 유연 박스 */
+        .fluid-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            border-width: 1px;
+            border-color: rgb(241 245 249);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 내부 요소를 정중앙으로 밀착 정렬 */
+            align-items: stretch;
+            gap: 0.75rem; /* 아이콘, 제목, 본문 간의 촘촘한 간격 */
+            height: auto; /* 고정 vh 대신 auto로 설정하여 휑한 여백 원천 봉쇄 */
+            min-height: 180px;
+            max-height: 280px; /* 극단적인 세로 늘어남 및 흰색 공백 버그 제한 */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fluid-card-icon {
+            height: 10vh; /* 반응형 최적 높이 비율 */
+            min-height: 50px;
+            max-height: 80px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            flex-shrink: 0;
+        }
+        .fluid-card-title {
+            font-weight: 900;
+            text-align: center;
+            padding: 0.5rem 0;
+            border-radius: 0.5rem;
+            flex-shrink: 0;
+            font-size: clamp(12px, 1.1vw, 18px);
+            word-break: keep-all;
+        }
+        
+        /* =============================================================
+           ★ 텍스트 세로 무너짐 완벽 방지 설계
+           ============================================================= */
+        .fluid-card-desc {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(10px, 0.95vw, 15px);
+            line-height: 1.35;
+            font-weight: 700;
+            text-align: center;
+            flex-shrink: 0;
+            width: 100%; /* 가로 폭을 카드가 허용하는 끝까지 확보 */
+        }
+        .fluid-card-desc p {
+            width: 100%; /* p태그 가로폭 100% 보장하여 flex 압축 해제 */
+            text-align: center;
+            word-break: keep-all; /* 단어가 임의로 글자 단위 분해되어 내려앉는 것 차단 */
+        }
     </style>
 </head>
-<body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-4 sm:p-5 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
+<body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-3 sm:p-4 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
 
-    <!-- 상단 네비게이션 및 실시간 관제 상태 바 (높이 고정하여 본문 공간 확보) -->
-    <header class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-2 mb-2 z-10 gap-2 shrink-0 h-[6vh] max-h-[50px] w-full">
+    <!-- 상단 네비게이션 및 실시간 관제 상태 바 -->
+    <header class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-2 mb-2 z-10 gap-2 shrink-0 w-full">
         <div class="flex items-center gap-1.5 min-w-0">
             <span class="flex h-3 w-3 relative shrink-0">
                 <span id="syncIndicatorRing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -47,7 +151,7 @@
             </span>
             <h1 class="font-bold text-xs sm:text-sm text-slate-700 truncate">📸 네컷사진 관제</h1>
             <!-- 동기화 상태 배지 -->
-            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-slate-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
+            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
                 <i class="fa-solid fa-signal text-[8px]"></i>
                 <span id="syncBadgeText">연결 대기중</span>
             </span>
@@ -70,41 +174,41 @@
         </div>
     </header>
 
-    <!-- 메인 콘텐츠 영역 (스크롤바 절대 배제 전용 세로 정렬 가이드 수립) -->
-    <main class="flex-grow flex flex-col justify-start overflow-hidden relative w-full h-[88vh]">
+    <!-- 메인 콘텐츠 영역 -->
+    <main class="flex-grow flex flex-col justify-start overflow-hidden relative w-full">
 
         <!-- ==========================================
              화면 1: 대기 학생용 전자칠판 전광판 (Display)
              ========================================== -->
-        <div id="billboardScreen" class="flex flex-col justify-between h-full w-full max-w-7xl mx-auto">
+        <div id="billboardScreen" class="fluid-container w-full">
             
-            <!-- 실시간 상태 알림판 (Tailwind 순수 클래스로 100% 정렬 유지 보장, vh 세로 비례 설계) -->
-            <div id="statusContainer" class="rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[22vh] min-h-[110px] max-h-[160px] w-full">
+            <!-- 실시간 상태 알림판 (촬영중 / 입장가능) - 둥근 테두리와 여유로운 세로 크기 적용 -->
+            <div id="statusContainer" class="rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full">
                 <div class="text-slate-300">
                     <i class="fa-solid fa-spinner animate-spin text-4xl"></i>
                 </div>
             </div>
 
-            <!-- 타이틀 및 카드 묶음 영역 (한 세트로 결합하여 해상도별 이탈 방지) -->
-            <div class="flex-grow flex flex-col justify-start gap-4 min-h-0">
+            <!-- 가이드 섹션 그룹 (타이틀 + 카드 그리드) - gap-1.5로 줄여서 타이틀과 카드가 밀착되도록 변경 -->
+            <div class="flex-grow flex flex-col justify-start gap-1.5 min-h-0">
                 
-                <!-- 가이드 타이틀 설명란 (높이 고정 및 폰트 vh 연동으로 스케일 통일) -->
-                <div class="text-center px-2 shrink-0 h-[8vh] flex flex-col justify-center">
-                    <h3 class="font-black text-pink-500 tracking-wide mb-0.5 drop-shadow-sm text-[2.2vh] sm:text-[3vh] lg:text-[3.5vh]" style="font-family: 'Gowun Dodum'; line-height: 1.2;">
+                <!-- 가이드 타이틀 설명란 (상태판과 카드 사이 중간 여백 고정) -->
+                <div class="text-center px-2 shrink-0">
+                    <h3 class="font-black text-pink-500 tracking-wide mb-1 drop-shadow-sm text-lg sm:text-2xl md:text-3xl lg:text-4xl" style="font-family: 'Gowun Dodum';">
                         🎨 사진 촬영 후! 인생네컷 꾸미기 가이드
                     </h3>
-                    <p class="text-slate-500 font-bold text-[1.2vh] sm:text-[1.5vh] lg:text-[1.8vh]">
+                    <p class="text-slate-500 font-bold text-xs sm:text-sm md:text-base">
                         부스 밖 꾸미기 구역에서 아래 가이드라인에 따라 사진을 멋지게 꾸며 주세요!
                     </p>
                 </div>
 
-                <!-- 4단계 가이드 가로 그리드 (높이를 48vh로 완전 차단하여 수직 스크롤 100% 방지) -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-2 flex-grow justify-items-center items-center overflow-hidden h-[48vh] max-h-[50vh] min-h-0 pb-2">
+                <!-- 4단계 가이드 가로 그리드 (안정적인 격자 배열 원복) -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-2 flex-grow justify-items-center items-start overflow-hidden pb-4">
                     
-                    <!-- 1번 카드: 사진 자르기 (aspect-[3/4] 및 반응형 최대 크기 확장, 여백 완전 밀착형) -->
-                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 flex flex-col justify-between items-center w-full h-full max-w-[280px] max-h-[22vh] sm:max-h-[28vh] lg:max-h-[38vh] aspect-[3/4] gap-3 shadow-indigo-50/50 transition-all duration-300 min-h-0">
-                        <!-- SVG Image Container (유연 비율 h-[35%]) -->
-                        <div class="w-full h-[35%] bg-rose-50 rounded-xl flex items-center justify-center p-1.5 sm:p-2 shrink-0 overflow-hidden text-rose-500">
+                    <!-- 1번 카드: 사진 자르기 -->
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-4 flex flex-col justify-start items-center w-full max-w-[260px] lg:max-w-[280px] gap-3 shadow-indigo-50/50">
+                        <!-- SVG Image Container -->
+                        <div class="w-full h-16 sm:h-20 md:h-24 bg-rose-50 rounded-xl flex items-center justify-center p-2 shrink-0 overflow-hidden text-rose-500">
                             <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="25" y="15" width="40" height="50" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
                                 <rect x="30" y="20" width="30" height="32" fill="#FFE4E6"/>
@@ -118,12 +222,12 @@
                                 </g>
                             </svg>
                         </div>
-                        <h4 class="w-full text-center bg-rose-50 text-rose-600 py-0.5 sm:py-1 rounded-lg text-[1.3vh] sm:text-[1.6vh] lg:text-[1.8vh] font-black shrink-0">
+                        <h4 class="w-full text-center bg-rose-50 text-rose-600 py-1 rounded-lg text-xs sm:text-sm md:text-base font-black shrink-0">
                             1. 사진 자르기
                         </h4>
-                        <!-- 상세설명 (글자 크기를 vh 비율로 고정하여 세로 무너짐 및 삐져나옴 완벽 방어) -->
-                        <div class="flex-grow flex items-center justify-center w-full py-0.5 sm:py-1 min-h-0 overflow-hidden">
-                            <p class="text-[1.1vh] sm:text-[1.3vh] lg:text-[1.5vh] font-bold text-slate-800 text-center leading-normal w-full" style="word-break: keep-all;">
+                        <!-- 상세설명 (불필요한 공백 제거하고 텍스트 주변 마진 최소화) -->
+                        <div class="py-1">
+                            <p class="text-[10px] sm:text-xs md:text-sm font-bold text-slate-800 text-center leading-normal" style="word-break: keep-all;">
                                 <span>마음에 드는 베스트 컷 1장만</span><br>
                                 <span class="text-rose-600 font-extrabold bg-rose-50/50 px-1 rounded">잘라주세요</span>
                             </p>
@@ -131,8 +235,8 @@
                     </div>
 
                     <!-- 2번 카드: 문구 쓰기 -->
-                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 flex flex-col justify-between items-center w-full h-full max-w-[280px] max-h-[22vh] sm:max-h-[28vh] lg:max-h-[38vh] aspect-[3/4] gap-3 shadow-indigo-50/50 transition-all duration-300 min-h-0">
-                        <div class="w-full h-[35%] bg-amber-50 rounded-xl flex items-center justify-center p-1.5 sm:p-2 shrink-0 overflow-hidden text-amber-500">
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-4 flex flex-col justify-start items-center w-full max-w-[260px] lg:max-w-[280px] gap-3 shadow-indigo-50/50">
+                        <div class="w-full h-16 sm:h-20 md:h-24 bg-amber-50 rounded-xl flex items-center justify-center p-2 shrink-0 overflow-hidden text-amber-500">
                             <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="30" y="10" width="40" height="55" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
                                 <rect x="35" y="15" width="30" height="35" fill="#FEF3C7"/>
@@ -144,12 +248,12 @@
                                 </g>
                             </svg>
                         </div>
-                        <h4 class="w-full text-center bg-amber-50 text-amber-600 py-0.5 sm:py-1 rounded-lg text-[1.3vh] sm:text-[1.6vh] lg:text-[1.8vh] font-black shrink-0">
+                        <h4 class="w-full text-center bg-amber-50 text-amber-600 py-1 rounded-lg text-xs sm:text-sm md:text-base font-black shrink-0">
                             2. 문구 쓰기
                         </h4>
                         <!-- 상세설명 (중앙 정렬 밀착) -->
-                        <div class="flex-grow flex items-center justify-center w-full py-0.5 sm:py-1 min-h-0 overflow-hidden">
-                            <p class="text-[1.1vh] sm:text-[1.3vh] lg:text-[1.5vh] font-bold text-slate-800 text-center leading-normal w-full" style="word-break: keep-all;">
+                        <div class="py-1">
+                            <p class="text-[10px] sm:text-xs md:text-sm font-bold text-slate-800 text-center leading-normal" style="word-break: keep-all;">
                                 <span>자른 사진에 네임펜으로</span><br>
                                 <span class="text-amber-600 font-extrabold bg-amber-50/50 px-1 rounded">오늘의 추억과 메세지</span><span>를</span><br>
                                 <span>남겨주세요</span>
@@ -158,8 +262,8 @@
                     </div>
 
                     <!-- 3번 카드: 창문에 붙이기 -->
-                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 flex flex-col justify-between items-center w-full h-full max-w-[280px] max-h-[22vh] sm:max-h-[28vh] lg:max-h-[38vh] aspect-[3/4] gap-3 shadow-indigo-50/50 transition-all duration-300 min-h-0">
-                        <div class="w-full h-[35%] bg-emerald-50 rounded-xl flex items-center justify-center p-1.5 sm:p-2 shrink-0 overflow-hidden text-emerald-500">
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-4 flex flex-col justify-start items-center w-full max-w-[260px] lg:max-w-[280px] gap-3 shadow-indigo-50/50">
+                        <div class="w-full h-16 sm:h-20 md:h-24 bg-emerald-50 rounded-xl flex items-center justify-center p-2 shrink-0 overflow-hidden text-emerald-500">
                             <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="15" y="15" width="70" height="70" rx="4" stroke="#059669" stroke-width="3" fill="#ECFDF5"/>
                                 <path d="M50 15 V85 M15 50 H85" stroke="#059669" stroke-width="2"/>
@@ -170,12 +274,12 @@
                                 </g>
                             </svg>
                         </div>
-                        <h4 class="w-full text-center bg-emerald-50 text-emerald-600 py-0.5 sm:py-1 rounded-lg text-[1.3vh] sm:text-[1.6vh] lg:text-[1.8vh] font-black shrink-0">
+                        <h4 class="w-full text-center bg-emerald-50 text-emerald-600 py-1 rounded-lg text-xs sm:text-sm md:text-base font-black shrink-0">
                             3. 창문에 붙이기
                         </h4>
                         <!-- 상세설명 (중앙 정렬 밀착) -->
-                        <div class="flex-grow flex items-center justify-center w-full py-0.5 sm:py-1 min-h-0 overflow-hidden">
-                            <p class="text-[1.1vh] sm:text-[1.3vh] lg:text-[1.5vh] font-bold text-slate-800 text-center leading-normal w-full" style="word-break: keep-all;">
+                        <div class="py-1">
+                            <p class="text-[10px] sm:text-xs md:text-sm font-bold text-slate-800 text-center leading-normal" style="word-break: keep-all;">
                                 <span>마스킹 테이프를 골라</span><br>
                                 <span class="text-emerald-600 font-extrabold bg-emerald-50/50 px-1 rounded">창문에 붙여주세요</span>
                             </p>
@@ -183,8 +287,8 @@
                     </div>
 
                     <!-- 4번 카드: 나누어 가지기 -->
-                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 flex flex-col justify-between items-center w-full h-full max-w-[280px] max-h-[22vh] sm:max-h-[28vh] lg:max-h-[38vh] aspect-[3/4] gap-3 shadow-indigo-50/50 transition-all duration-300 min-h-0">
-                        <div class="w-full h-[35%] bg-purple-50 rounded-xl flex items-center justify-center p-1.5 sm:p-2 shrink-0 overflow-hidden text-purple-500">
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-4 flex flex-col justify-start items-center w-full max-w-[260px] lg:max-w-[280px] gap-3 shadow-indigo-50/50">
+                        <div class="w-full h-16 sm:h-20 md:h-24 bg-purple-50 rounded-xl flex items-center justify-center p-2 shrink-0 overflow-hidden text-purple-500">
                             <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="18" y="25" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(-15 18 25)"/>
                                 <rect x="52" y="20" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(15 52 20)"/>
@@ -192,12 +296,12 @@
                                 <path d="M15 65 C20 62, 28 66, 35 70 M85 65 C80 62, 72 66, 65 70" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
                             </svg>
                         </div>
-                        <h4 class="w-full text-center bg-purple-50 text-purple-600 py-0.5 sm:py-1 rounded-lg text-[1.3vh] sm:text-[1.6vh] lg:text-[1.8vh] font-black shrink-0">
+                        <h4 class="w-full text-center bg-purple-50 text-purple-600 py-1 rounded-lg text-xs sm:text-sm md:text-base font-black shrink-0">
                             4. 나누어 가지기
                         </h4>
                         <!-- 상세설명 (중앙 정렬 밀착) -->
-                        <div class="flex-grow flex items-center justify-center w-full py-0.5 sm:py-1 min-h-0 overflow-hidden">
-                            <p class="text-[1.1vh] sm:text-[1.3vh] lg:text-[1.5vh] font-bold text-slate-800 text-center leading-normal w-full" style="word-break: keep-all;">
+                        <div class="py-1">
+                            <p class="text-[10px] sm:text-xs md:text-sm font-bold text-slate-800 text-center leading-normal" style="word-break: keep-all;">
                                 <span>나머지 사진은</span><br>
                                 <span class="text-purple-600 font-extrabold bg-purple-50/50 px-1 rounded">친구들과 나누어 가지세요</span>
                             </p>
