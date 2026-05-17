@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko" class="h-full">
 <head>
@@ -35,6 +34,110 @@
         .animate-gentle-bounce {
             animation: gentle-bounce 2s infinite ease-in-out;
         }
+
+        /* =============================================================
+           ★ 초고화질 대형 화면 & 반응형 오토 스케일링 전용 CSS 규격 정의
+           ============================================================= */
+        .fluid-container {
+            height: calc(100vh - 80px); /* 헤더 및 바디 패딩을 제외한 남은 뷰포트 영역 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        /* 실시간 상태 알림판의 반응형 크기 제약 */
+        .fluid-status-container {
+            border-radius: 1.25rem;
+            padding: 2vh;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-width: 2px;
+            transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            height: 18vh;
+            min-height: 100px;
+            max-height: 170px;
+            width: 100%;
+            max-width: 100%;
+        }
+        /* 타이틀 설명 영역 반응형 여백 */
+        .fluid-title-section {
+            height: 8vh;
+            min-height: 50px;
+            max-height: 80px;
+            margin: 1.5vh 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* 4단계 가이드 그리드 - 세로 삐져나옴 방지 규격 */
+        .fluid-grid {
+            display: grid;
+            grid-template-cols: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            flex-grow: 1;
+            min-height: 0;
+            align-content: center;
+        }
+        @media (min-width: 1024px) {
+            .fluid-grid {
+                grid-template-cols: repeat(4, minmax(0, 1fr));
+                gap: 20px;
+            }
+        }
+        /* 안내 카드 - 빈 여백을 원천 차단하고 황금 비율로 축소 고정하는 하이브리드 박스 */
+        .fluid-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            border-width: 1px;
+            border-color: rgb(241 245 249);
+            padding: 1.8vh 1.2vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: stretch;
+            height: 32vh; /* 뷰포트 세로 비례 최적화 높이값 */
+            min-height: 180px;
+            max-height: 320px; /* 극단적인 세로 늘어남 방지 */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fluid-card-icon {
+            height: 11vh; /* 뷰포트 비례 아이콘 박스 크기 */
+            min-height: 55px;
+            max-height: 100px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8vh;
+            flex-shrink: 0;
+        }
+        .fluid-card-title {
+            font-weight: 900;
+            text-align: center;
+            padding: 0.6vh 0;
+            border-radius: 0.5rem;
+            flex-shrink: 0;
+            font-size: clamp(12px, 1.1vw, 18px);
+        }
+        .fluid-card-desc {
+            height: 10vh; /* 설명문 바운더리 규격 제한 */
+            min-height: 50px;
+            max-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(10px, 0.95vw, 15px);
+            line-height: 1.35;
+            font-weight: 700;
+            text-align: center;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-3 sm:p-4 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
@@ -48,13 +151,13 @@
             </span>
             <h1 class="font-bold text-xs sm:text-sm text-slate-700 truncate">📸 네컷사진 관제</h1>
             <!-- 동기화 상태 배지 -->
-            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-slate-200 flex items-center gap-1 shrink-0 transition-all duration-300">
+            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-slate-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
                 <i class="fa-solid fa-signal text-[8px]"></i>
                 <span id="syncBadgeText">연결 대기중</span>
             </span>
         </div>
 
-        <!-- 실시간 무선 연동 컨트롤 영역 (자동 무설정 연결 완료) -->
+        <!-- 실시간 무선 연동 컨트롤 영역 -->
         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0">
             <!-- 방 번호 입력란 (숨김 설정하되, 비상용으로 작은 텍스트로 보존) -->
             <div class="hidden items-center gap-1 bg-slate-100 px-2 py-1 rounded-full text-[10px] sm:text-xs border border-slate-200">
@@ -71,39 +174,39 @@
         </div>
     </header>
 
-    <!-- 메인 콘텐츠 영역 (잘림 현상 완전 방지) -->
+    <!-- 메인 콘텐츠 영역 -->
     <main class="flex-grow flex flex-col justify-start overflow-hidden relative w-full">
 
         <!-- ==========================================
              화면 1: 대기 학생용 전자칠판 전광판 (Display)
              ========================================== -->
-        <div id="billboardScreen" class="flex-grow flex flex-col justify-start h-full gap-1 w-full">
+        <div id="billboardScreen" class="fluid-container w-full">
             
             <!-- 실시간 상태 알림판 (촬영중 / 입장가능) - 컴팩트하고 세련되게 세로 비율 축소 -->
-            <div id="statusContainer" class="rounded-2xl p-3 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[18vh] md:h-[20vh] w-full max-w-full">
+            <div id="statusContainer" class="fluid-status-container border-2 transition-all duration-500">
                 <div class="text-slate-300">
                     <i class="fa-solid fa-spinner animate-spin text-4xl"></i>
                 </div>
             </div>
 
             <!-- 가이드 타이틀 설명란 (상태판과 카드 사이 중간 여백 고정) -->
-            <div class="text-center my-4 sm:my-6 shrink-0 px-2">
-                <h3 class="font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl text-pink-500 tracking-wide mb-1 drop-shadow-sm">
+            <div class="fluid-title-section text-center px-2 shrink-0">
+                <h3 class="font-black text-pink-500 tracking-wide mb-0.5 drop-shadow-sm" style="font-size: clamp(18px, 3vh, 32px); line-height: 1.2;">
                     🎨 사진 촬영 후! 인생네컷 꾸미기 가이드
                 </h3>
-                <p class="text-slate-500 text-[10px] sm:text-xs md:text-sm lg:text-base font-bold">
+                <p class="text-slate-500 font-bold" style="font-size: clamp(10px, 1.4vh, 15px);">
                     부스 밖 꾸미기 구역에서 아래 가이드라인에 따라 사진을 멋지게 꾸며 주세요!
                 </p>
             </div>
 
-            <!-- 4단계 가이드 가로 그리드 (extra space 발생 시 카드를 무한정 늘리지 않고 중앙에 정렬) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 lg:gap-5 flex-grow content-center overflow-hidden pb-3 w-full max-w-full px-1">
+            <!-- 4단계 가이드 가로 그리드 (extra space 발생 시 카드를 무한정 늘리지 않고 중앙에 완벽 정렬) -->
+            <div class="fluid-grid px-1">
                 
-                <!-- 1번 카드: 사진 자르기 (세로 최대 크기를 타이트하게 제약) -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
-                    <!-- SVG Image Container (모바일에서 세로 크기를 유연하게 제한) -->
-                    <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-rose-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
-                        <svg class="w-full h-full text-rose-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 1번 카드: 사진 자르기 -->
+                <div class="fluid-card hover:shadow-md transition-all duration-300">
+                    <!-- SVG Image Container -->
+                    <div class="fluid-card-icon bg-rose-50 text-rose-500">
+                        <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="25" y="15" width="40" height="50" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
                             <rect x="30" y="20" width="30" height="32" fill="#FFE4E6"/>
                             <circle cx="45" cy="32" r="6" fill="currentColor"/>
@@ -116,12 +219,12 @@
                             </g>
                         </svg>
                     </div>
-                    <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-rose-50 text-rose-600 py-1 sm:py-1.5 rounded-lg shrink-0">
+                    <h4 class="fluid-card-title bg-rose-50 text-rose-600">
                         1. 사진 자르기
                     </h4>
-                    <!-- 상세설명 (불필요한 빈 여백을 최소화하여 텍스트 크기에 가깝게 정돈) -->
-                    <div class="flex-grow flex items-center justify-center min-h-0 py-1">
-                        <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-bold leading-normal text-center">
+                    <!-- 상세설명 (상하단 여백을 완벽 정돈하여 텍스트 크기에 가깝게 정렬) -->
+                    <div class="fluid-card-desc text-slate-800">
+                        <p class="leading-normal text-center">
                             <span>마음에 드는 베스트 컷 1장만</span><br>
                             <span class="text-rose-600 font-extrabold bg-rose-50/50 px-1 rounded">잘라주세요</span>
                         </p>
@@ -129,9 +232,9 @@
                 </div>
 
                 <!-- 2번 카드: 문구 쓰기 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
-                    <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-amber-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
-                        <svg class="w-full h-full text-amber-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="fluid-card hover:shadow-md transition-all duration-300">
+                    <div class="fluid-card-icon bg-amber-50 text-amber-500">
+                        <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="30" y="10" width="40" height="55" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
                             <rect x="35" y="15" width="30" height="35" fill="#FEF3C7"/>
                             <path d="M36 56 H64" stroke="#D97706" stroke-width="2" stroke-linecap="round"/>
@@ -142,12 +245,12 @@
                             </g>
                         </svg>
                     </div>
-                    <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-amber-50 text-amber-600 py-1 sm:py-1.5 rounded-lg shrink-0">
+                    <h4 class="fluid-card-title bg-amber-50 text-amber-600">
                         2. 문구 쓰기
                     </h4>
                     <!-- 상세설명 (중앙 정렬 밀착) -->
-                    <div class="flex-grow flex items-center justify-center min-h-0 py-1">
-                        <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-bold leading-normal text-center">
+                    <div class="fluid-card-desc text-slate-800">
+                        <p class="leading-normal text-center">
                             <span>자른 사진에 네임펜으로</span><br>
                             <span class="text-amber-600 font-extrabold bg-amber-50/50 px-1 rounded">오늘의 추억과 메세지</span><span>를</span><br>
                             <span>남겨주세요</span>
@@ -156,9 +259,9 @@
                 </div>
 
                 <!-- 3번 카드: 창문에 붙이기 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
-                    <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-emerald-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
-                        <svg class="w-full h-full text-emerald-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="fluid-card hover:shadow-md transition-all duration-300">
+                    <div class="fluid-card-icon bg-emerald-50 text-emerald-500">
+                        <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="15" y="15" width="70" height="70" rx="4" stroke="#059669" stroke-width="3" fill="#ECFDF5"/>
                             <path d="M50 15 V85 M15 50 H85" stroke="#059669" stroke-width="2"/>
                             <g transform="translate(30, 25) rotate(10)">
@@ -168,12 +271,12 @@
                             </g>
                         </svg>
                     </div>
-                    <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-emerald-50 text-emerald-600 py-1 sm:py-1.5 rounded-lg shrink-0">
+                    <h4 class="fluid-card-title bg-emerald-50 text-emerald-600">
                         3. 창문에 붙이기
                     </h4>
                     <!-- 상세설명 (중앙 정렬 밀착) -->
-                    <div class="flex-grow flex items-center justify-center min-h-0 py-1">
-                        <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-bold leading-normal text-center">
+                    <div class="fluid-card-desc text-slate-800">
+                        <p class="leading-normal text-center">
                             <span>마스킹 테이프를 골라</span><br>
                             <span class="text-emerald-600 font-extrabold bg-emerald-50/50 px-1 rounded">창문에 붙여주세요</span>
                         </p>
@@ -181,21 +284,21 @@
                 </div>
 
                 <!-- 4번 카드: 나누어 가지기 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
-                    <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-purple-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
-                        <svg class="w-full h-full text-purple-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="fluid-card hover:shadow-md transition-all duration-300">
+                    <div class="fluid-card-icon bg-purple-50 text-purple-500">
+                        <svg class="w-full h-full max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="18" y="25" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(-15 18 25)"/>
                             <rect x="52" y="20" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(15 52 20)"/>
                             <path d="M45 15 C42 10, 36 12, 36 18 C36 24, 45 30, 45 30 C45 30, 54 24, 54 18 C54 12, 48 10, 45 15 Z" fill="#A78BFA"/>
                             <path d="M15 65 C20 62, 28 66, 35 70 M85 65 C80 62, 72 66, 65 70" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-purple-50 text-purple-600 py-1 sm:py-1.5 rounded-lg shrink-0">
+                    <h4 class="fluid-card-title bg-purple-50 text-purple-600">
                         4. 나누어 가지기
                     </h4>
                     <!-- 상세설명 (중앙 정렬 밀착) -->
-                    <div class="flex-grow flex items-center justify-center min-h-0 py-1">
-                        <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-bold leading-normal text-center">
+                    <div class="fluid-card-desc text-slate-800">
+                        <p class="leading-normal text-center">
                             <span>나머지 사진은</span><br>
                             <span class="text-purple-600 font-extrabold bg-purple-50/50 px-1 rounded">친구들과 나누어 가지세요</span>
                         </p>
@@ -327,22 +430,22 @@
             if (!statusContainer) return;
 
             if (window.currentStatus === 'BUSY') {
-                statusContainer.className = "bg-gradient-to-br from-rose-500 via-red-600 to-rose-700 text-white rounded-2xl p-4 shadow-lg flex flex-col items-center justify-center text-center border-2 border-rose-300 shrink-0 h-[18vh] md:h-[20vh] w-full max-w-full animate-custom-pulse transition-all duration-500";
+                statusContainer.className = "fluid-status-container bg-gradient-to-br from-rose-500 via-red-600 to-rose-700 text-white border-rose-300 animate-custom-pulse";
                 statusContainer.innerHTML = `
                     <div class="flex items-center justify-center gap-2 sm:gap-4 mb-0.5 max-w-full overflow-hidden">
-                        <i class="fa-solid fa-camera text-xl sm:text-3xl md:text-5xl text-rose-100 animate-pulse shrink-0"></i>
-                        <h2 class="text-xl sm:text-4xl md:text-6xl font-black tracking-widest text-white drop-shadow-sm truncate">촬영중</h2>
+                        <i class="fa-solid fa-camera text-rose-100 animate-pulse shrink-0" style="font-size: clamp(20px, 3.5vh, 48px);"></i>
+                        <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(24px, 4.5vh, 60px);">촬영중</h2>
                     </div>
-                    <p class="text-[9px] sm:text-xs md:text-lg font-bold text-rose-100 drop-shadow-sm">지금은 입장이 불가합니다.</p>
+                    <p class="font-bold text-rose-100 drop-shadow-sm" style="font-size: clamp(10px, 1.8vh, 18px);">지금은 입장이 불가합니다.</p>
                 `;
             } else {
-                statusContainer.className = "bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white rounded-2xl p-4 shadow-lg flex flex-col items-center justify-center text-center border-2 border-emerald-300 shrink-0 h-[18vh] md:h-[20vh] w-full max-w-full animate-gentle-bounce transition-all duration-500";
+                statusContainer.className = "fluid-status-container bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white border-emerald-300 animate-gentle-bounce";
                 statusContainer.innerHTML = `
                     <div class="flex items-center justify-center gap-2 sm:gap-4 mb-0.5 max-w-full overflow-hidden">
-                        <i class="fa-solid fa-door-open text-xl sm:text-3xl md:text-5xl text-emerald-100 shrink-0"></i>
-                        <h2 class="text-xl sm:text-4xl md:text-6xl font-black tracking-widest text-white drop-shadow-sm truncate">입장 가능</h2>
+                        <i class="fa-solid fa-door-open text-emerald-100 shrink-0" style="font-size: clamp(20px, 3.5vh, 48px);"></i>
+                        <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(24px, 4.5vh, 60px);">입장 가능</h2>
                     </div>
-                    <p class="text-[9px] sm:text-xs md:text-lg font-bold text-emerald-100 drop-shadow-sm">지금 바로 입장해 주세요!</p>
+                    <p class="font-bold text-emerald-100 drop-shadow-sm" style="font-size: clamp(10px, 1.8vh, 18px);">지금 바로 입장해 주세요!</p>
                 `;
             }
         }
