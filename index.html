@@ -115,7 +115,12 @@
             border-radius: 0.5rem;
             flex-shrink: 0;
             font-size: clamp(12px, 1.1vw, 18px);
+            word-break: keep-all;
         }
+        
+        /* =============================================================
+           ★ 텍스트 세로 무너짐 완벽 방지 설계
+           ============================================================= */
         .fluid-card-desc {
             display: flex;
             flex-direction: column;
@@ -126,6 +131,12 @@
             font-weight: 700;
             text-align: center;
             flex-shrink: 0;
+            width: 100%; /* 가로 폭을 카드가 허용하는 끝까지 확보 */
+        }
+        .fluid-card-desc p {
+            width: 100%; /* p태그 가로폭 100% 보장하여 flex 압축 해제 */
+            text-align: center;
+            word-break: keep-all; /* 단어가 임의로 글자 단위 분해되어 내려앉는 것 차단 */
         }
     </style>
 </head>
@@ -156,7 +167,7 @@
             </div>
 
             <!-- 모드 전환 버튼 -->
-            <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md hover:shadow transition-all duration-150 active:scale-95 flex items-center gap-1 shrink-0">
+            <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-sm hover:shadow transition-all duration-150 active:scale-95 flex items-center gap-1 shrink-0">
                 <i class="fa-solid fa-arrows-rotate"></i>
                 <span id="modeButtonText">리모컨 모드</span>
             </button>
