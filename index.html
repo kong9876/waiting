@@ -34,6 +34,110 @@
         .animate-gentle-bounce {
             animation: gentle-bounce 2s infinite ease-in-out;
         }
+
+        /* =============================================================
+           ★ 초고화질 대형 화면 & 반응형 오토 스케일링 전용 CSS 규격 정의
+           ============================================================= */
+        .fluid-container {
+            height: calc(100vh - 90px); /* 헤더 및 여백 고려한 최적 뷰포트 영역 */
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            gap: 5.5vh; /* ★ 상태판과 하단 꾸미기 가이드 섹션 사이의 최적 여백 */
+        }
+        /* 실시간 상태 알림판의 반응형 크기 및 둥근 테두리 제약 */
+        .fluid-status-container {
+            border-radius: 2.25rem; /* 더 부드럽고 동글동글하게 강화 */
+            padding: 2.5vh 2vw;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-width: 2px;
+            transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            height: 24vh; /* 세로 높이를 더 넉넉하게 조정 */
+            min-height: 140px; /* 최소 높이 확보 */
+            max-height: 220px; /* 폰트 확대에 대응하기 위해 최대 높이를 220px로 확장 */
+            width: 100%;
+            max-width: 100%;
+        }
+        /* 4단계 가이드 그리드 - 삐져나옴 방지 및 자동 축소 규격 */
+        .fluid-grid {
+            display: grid;
+            grid-template-cols: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            flex-grow: 1;
+            min-height: 0;
+            align-content: start;
+        }
+        @media (min-width: 1024px) {
+            .fluid-grid {
+                grid-template-cols: repeat(4, minmax(0, 1fr));
+                gap: 20px;
+            }
+        }
+        /* 안내 카드 - 빈 흰색 여백을 원천 차단하고 황금 비율을 고정하는 밀착형 유연 박스 */
+        .fluid-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            border-width: 1px;
+            border-color: rgb(241 245 249);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 내부 요소를 정중앙으로 밀착 정렬 */
+            align-items: stretch;
+            gap: 0.75rem; /* 아이콘, 제목, 본문 간의 촘촘한 간격 */
+            height: auto; /* 고정 vh 대신 auto로 설정하여 휑한 여백 원천 봉쇄 */
+            min-height: 180px;
+            max-height: 280px; /* 극단적인 세로 늘어남 및 흰색 공백 버그 제한 */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fluid-card-icon {
+            height: 10vh; /* 반응형 최적 높이 비율 */
+            min-height: 50px;
+            max-height: 80px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            flex-shrink: 0;
+        }
+        .fluid-card-title {
+            font-weight: 900;
+            text-align: center;
+            padding: 0.5rem 0;
+            border-radius: 0.5rem;
+            flex-shrink: 0;
+            font-size: clamp(12px, 1.1vw, 18px);
+            word-break: keep-all;
+        }
+        
+        /* =============================================================
+           ★ 텍스트 세로 무너짐 완벽 방지 설계
+           ============================================================= */
+        .fluid-card-desc {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(10px, 0.95vw, 15px);
+            line-height: 1.35;
+            font-weight: 700;
+            text-align: center;
+            flex-shrink: 0;
+            width: 100%; /* 가로 폭을 카드가 허용하는 끝까지 확보 */
+        }
+        .fluid-card-desc p {
+            width: 100%; /* p태그 가로폭 100% 보장하여 flex 압축 해제 */
+            text-align: center;
+            word-break: keep-all; /* 단어가 임의로 글자 단위 분해되어 내려앉는 것 차단 */
+        }
     </style>
 </head>
 <body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-3 sm:p-4 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
@@ -47,7 +151,7 @@
             </span>
             <h1 class="font-bold text-xs sm:text-sm text-slate-700 truncate">📸 네컷사진 관제</h1>
             <!-- 동기화 상태 배지 -->
-            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-slate-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
+            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
                 <i class="fa-solid fa-signal text-[8px]"></i>
                 <span id="syncBadgeText">연결 대기중</span>
             </span>
@@ -76,10 +180,10 @@
         <!-- ==========================================
              화면 1: 대기 학생용 전자칠판 전광판 (Display)
              ========================================== -->
-        <div id="billboardScreen" class="flex flex-col justify-start h-[calc(100vh-80px)] w-full gap-4">
+        <div id="billboardScreen" class="fluid-container w-full">
             
-            <!-- 실시간 상태 알림판 (촬영중 / 입장가능) - 컴팩트하고 세련되게 세로 비율 축소 -->
-            <div id="statusContainer" class="rounded-2xl p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[18vh] min-h-[100px] max-h-[150px] w-full">
+            <!-- 실시간 상태 알림판 (촬영중 / 입장가능) - 둥근 테두리와 여유로운 세로 크기 적용 -->
+            <div id="statusContainer" class="rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full">
                 <div class="text-slate-300">
                     <i class="fa-solid fa-spinner animate-spin text-4xl"></i>
                 </div>
@@ -334,19 +438,19 @@
                 statusContainer.className = "fluid-status-container bg-gradient-to-br from-rose-500 via-red-600 to-rose-700 text-white border-rose-300 animate-custom-pulse transition-all duration-500";
                 statusContainer.innerHTML = `
                     <div class="flex items-center justify-center gap-2 sm:gap-4 mb-0.5 max-w-full overflow-hidden">
-                        <i class="fa-solid fa-camera text-rose-100 animate-pulse shrink-0" style="font-size: clamp(20px, 3.5vh, 48px);"></i>
-                        <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(24px, 4.5vh, 60px);">촬영중</h2>
+                        <i class="fa-solid fa-camera text-rose-100 animate-pulse shrink-0" style="font-size: clamp(28px, 4.5vh, 64px);"></i>
+                        <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(32px, 6vh, 85px);">촬영중</h2>
                     </div>
-                    <p class="font-bold text-rose-100 drop-shadow-sm" style="font-size: clamp(10px, 1.8vh, 18px);">지금은 입장이 불가합니다.</p>
+                    <p class="font-bold text-rose-100 drop-shadow-sm" style="font-size: clamp(12px, 2.2vh, 24px);">지금은 입장이 불가합니다.</p>
                 `;
             } else {
                 statusContainer.className = "fluid-status-container bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white border-emerald-300 animate-gentle-bounce transition-all duration-500";
                 statusContainer.innerHTML = `
                     <div class="flex items-center justify-center gap-2 sm:gap-4 mb-0.5 max-w-full overflow-hidden">
-                        <i class="fa-solid fa-door-open text-emerald-100 shrink-0" style="font-size: clamp(20px, 3.5vh, 48px);"></i>
-                        <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(24px, 4.5vh, 60px);">입장 가능</h2>
+                        <i class="fa-solid fa-door-open text-emerald-100 shrink-0" style="font-size: clamp(28px, 4.5vh, 64px);"></i>
+                        <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(32px, 6vh, 85px);">입장 가능</h2>
                     </div>
-                    <p class="font-bold text-emerald-100 drop-shadow-sm" style="font-size: clamp(10px, 1.8vh, 18px);">지금 바로 입장해 주세요!</p>
+                    <p class="font-bold text-emerald-100 drop-shadow-sm" style="font-size: clamp(12px, 2.2vh, 24px);">지금 바로 입장해 주세요!</p>
                 `;
             }
         }
