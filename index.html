@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google 폰트: 고운돋움 및 Inter (주소 오류 복구 완료) -->
+    <!-- Google 폰트: 고운돋움 및 Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -43,11 +43,11 @@
             display: flex;
             flex-direction: column;
             justify-content: start;
-            gap: 7vh; /* ★ 상태판과 하단 꾸미기 가이드 섹션 사이의 여백을 더 시원하게 확장 */
+            gap: 7vh; /* 상태판과 하단 꾸미기 가이드 섹션 사이의 최적 여백 */
         }
         /* 실시간 상태 알림판의 반응형 크기 및 둥근 테두리 제약 */
         .fluid-status-container {
-            border-radius: 2.25rem; /* 더 부드럽고 동글동글하게 강화 */
+            border-radius: 2.25rem;
             padding: 2.5vh 2vw;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             display: flex;
@@ -56,15 +56,15 @@
             justify-content: center;
             text-align: center;
             border-width: 2px;
-            transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
-            height: 23vh; /* 세로 높이를 기존 18vh에서 23vh로 높임 */
-            min-height: 130px; /* 최소 높이 상향 */
-            max-height: 200px; /* 최대 높이 확장으로 텍스트 넘침 원천 차단 */
+            height: 23vh;
+            min-height: 130px;
+            max-height: 200px;
             width: 100%;
             max-width: 100%;
         }
-        /* 4단계 가이드 그리드 - 삐져나옴 방지 및 자동 축소 규격 */
+        /* 4단계 가이드 그리드 */
         .fluid-grid {
             display: grid;
             grid-template-cols: repeat(2, minmax(0, 1fr));
@@ -118,9 +118,7 @@
             word-break: keep-all;
         }
         
-        /* =============================================================
-           ★ 텍스트 세로 무너짐 완벽 방지 설계
-           ============================================================= */
+        /* 텍스트 세로 무너짐 완벽 방지 설계 */
         .fluid-card-desc {
             display: flex;
             flex-direction: column;
@@ -151,13 +149,13 @@
             </span>
             <h1 class="font-bold text-xs sm:text-sm text-slate-700 truncate">📸 네컷사진 관제</h1>
             <!-- 동기화 상태 배지 -->
-            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
+            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold border border-slate-200 flex items-center gap-1 shrink-0 transition-all duration-300 shadow-sm">
                 <i class="fa-solid fa-signal text-[8px]"></i>
                 <span id="syncBadgeText">연결 대기중</span>
             </span>
         </div>
 
-        <!-- 실시간 무선 연동 컨트롤 영역 -->
+        <!-- 실시간 무선 연동 컨트롤 영역 (채널 이동 기능은 백업용으로만 작동 가능하도록 설정) -->
         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0">
             <!-- 방 번호 입력란 (숨김 설정하되, 비상용으로 작은 텍스트로 보존) -->
             <div class="hidden items-center gap-1 bg-slate-100 px-2 py-1 rounded-full text-[10px] sm:text-xs border border-slate-200">
@@ -165,12 +163,12 @@
                 <input id="syncCodeInput" type="text" class="w-12 sm:w-16 font-extrabold text-center bg-white border border-slate-300 rounded px-1 py-0.5 focus:outline-none text-slate-800">
                 <button onclick="applyManualSyncCode()" class="bg-indigo-600 text-white px-2 py-0.5 rounded font-bold">이동</button>
             </div>
-
-            <!-- 모드 전환 버튼 -->
-            <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-sm hover:shadow transition-all duration-150 active:scale-95 flex items-center gap-1 shrink-0">
-                <i class="fa-solid fa-arrows-rotate"></i>
-                <span id="modeButtonText">리모컨 모드</span>
-            </button>
+            
+            <!-- 실시간 동기화 상태 표시 전용 라벨 -->
+            <span class="text-[10px] sm:text-xs text-slate-400 font-semibold bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+                <i class="fa-solid fa-arrows-spin animate-spin mr-1"></i>
+                <span>실시간 통합 모드</span>
+            </span>
         </div>
     </header>
 
@@ -182,14 +180,14 @@
              ========================================== -->
         <div id="billboardScreen" class="fluid-container w-full">
             
-            <!-- 실시간 상태 알림판 (촬영중 / 입장가능) - 둥근 테두리와 여유로운 세로 크기 적용 -->
-            <div id="statusContainer" class="rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full">
+            <!-- 실시간 상태 알림판 (클릭/터치 가능한 구조로 변경, onclick 바인딩 완료) -->
+            <div id="statusContainer" onclick="toggleLocalBoothState()" class="rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-white transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full cursor-pointer hover:scale-[1.01] active:scale-[0.99]">
                 <div class="text-slate-300">
                     <i class="fa-solid fa-spinner animate-spin text-4xl"></i>
                 </div>
             </div>
 
-            <!-- 가이드 섹션 그룹 (타이틀 + 카드 그리드) - gap-1.5로 줄여서 타이틀과 카드가 밀착되도록 변경 -->
+            <!-- 가이드 섹션 그룹 (타이틀 + 카드 그리드) - 타이틀과 가이드가 이탈 없이 착 밀착됩니다. -->
             <div class="flex-grow flex flex-col justify-start gap-1.5 min-h-0">
                 
                 <!-- 가이드 타이틀 설명란 (상태판과 카드 사이 중간 여백 고정) -->
@@ -313,41 +311,6 @@
             
         </div>
 
-        <!-- ==========================================
-             화면 2: 안쪽 선생님 제어용 모드 (Control Remote)
-             ========================================== -->
-        <div id="controlScreen" class="hidden flex-grow flex flex-col justify-center items-center h-full max-w-lg mx-auto px-4 w-full">
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-200 w-full text-center">
-                <div class="inline-flex p-3 bg-indigo-50 text-indigo-600 rounded-full mb-3">
-                    <i class="fa-solid fa-person-chalkboard text-3xl"></i>
-                </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-800 mb-2">선생님 원격 상태 제어기</h2>
-                <p class="text-xs md:text-sm text-slate-500 mb-6 leading-relaxed">
-                    바깥에 배치해 놓은 전자칠판 스크린과 무선 실시간 연동됩니다.<br>
-                    안에서 상태 버튼을 누르면 즉시 동기화됩니다.
-                </p>
-
-                <!-- 제어 버튼 목록 -->
-                <div class="flex flex-col gap-4">
-                    <button onclick="changeBoothState('BUSY')" class="w-full py-5 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white rounded-2xl text-lg md:text-xl font-extrabold shadow-lg transition duration-150 flex items-center justify-center gap-3">
-                        <i class="fa-solid fa-camera animate-pulse"></i>
-                        <span>지금은 촬영 중 (진입 불가)</span>
-                    </button>
-                    <button onclick="changeBoothState('AVAILABLE')" class="w-full py-5 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white rounded-2xl text-lg md:text-xl font-extrabold shadow-lg transition duration-150 flex items-center justify-center gap-3">
-                        <i class="fa-solid fa-door-open"></i>
-                        <span>부스 비어있음 (입장 가능)</span>
-                    </button>
-                </div>
-
-                <div class="mt-6 text-xs text-slate-400 flex flex-col items-center gap-1 bg-slate-50 py-3 rounded-xl border border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                        <span class="font-bold">무선 네트워크 실시간 동기화 완료</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </main>
 
     <!-- 구글 파이어베이스 SDK 모듈 CDN 연결 -->
@@ -371,7 +334,6 @@
         // =============================================================
 
         // APP STATE 전역 관리용 변수
-        window.currentMode = 'DISPLAY';
         window.currentStatus = 'AVAILABLE';
         window.syncCode = '1'; // 기본 고정 채널을 '1'로 설정하여 즉각 자동 연동 유도
 
@@ -382,10 +344,6 @@
         let firebaseUnsubscribe = null;
 
         // DOM 요소 제어 변수
-        const billboardScreen = document.getElementById('billboardScreen');
-        const controlScreen = document.getElementById('controlScreen');
-        const modeToggleBtn = document.getElementById('modeToggleBtn');
-        const modeButtonText = document.getElementById('modeButtonText');
         const statusContainer = document.getElementById('statusContainer');
         const syncIndicatorDot = document.getElementById('syncIndicatorDot');
         const syncIndicatorRing = document.getElementById('syncIndicatorRing');
@@ -434,23 +392,28 @@
         function updateDisplayPanel() {
             if (!statusContainer) return;
 
+            // 터치를 유도하는 작은 안내 문구 캡션
+            const touchCaption = `<span class="text-[9px] sm:text-xs font-bold opacity-80 mt-1"><i class="fa-solid fa-hand-pointer animate-bounce mr-1"></i> 화면 터치로 상태 전환</span>`;
+
             if (window.currentStatus === 'BUSY') {
-                statusContainer.className = "rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-rose-300 bg-gradient-to-br from-rose-500 via-red-600 to-rose-700 text-white animate-custom-pulse transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full shadow-lg shadow-rose-100";
+                statusContainer.className = "fluid-status-container bg-gradient-to-br from-rose-500 via-red-600 to-rose-700 text-white border-rose-300 animate-custom-pulse transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full shadow-lg shadow-rose-100 cursor-pointer hover:scale-[1.01] active:scale-[0.99]";
                 statusContainer.innerHTML = `
                     <div class="flex items-center justify-center gap-2 sm:gap-4 mb-0.5 max-w-full overflow-hidden">
                         <i class="fa-solid fa-camera text-rose-100 animate-pulse shrink-0" style="font-size: clamp(28px, 4.5vh, 64px);"></i>
                         <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(32px, 6vh, 85px);">촬영중</h2>
                     </div>
                     <p class="font-bold text-rose-100 drop-shadow-sm text-center w-full" style="font-size: clamp(12px, 2.2vh, 24px);">지금은 입장이 불가합니다.</p>
+                    ${touchCaption}
                 `;
             } else {
-                statusContainer.className = "rounded-[2.25rem] p-4 shadow-md flex flex-col items-center justify-center text-center border-2 border-emerald-300 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white animate-gentle-bounce transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full shadow-lg shadow-emerald-100";
+                statusContainer.className = "fluid-status-container bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white border-emerald-300 animate-gentle-bounce transition-all duration-500 shrink-0 h-[23vh] min-h-[130px] max-h-[200px] w-full shadow-lg shadow-emerald-100 cursor-pointer hover:scale-[1.01] active:scale-[0.99]";
                 statusContainer.innerHTML = `
                     <div class="flex items-center justify-center gap-2 sm:gap-4 mb-0.5 max-w-full overflow-hidden">
                         <i class="fa-solid fa-door-open text-emerald-100 shrink-0" style="font-size: clamp(28px, 4.5vh, 64px);"></i>
                         <h2 class="font-black tracking-widest text-white drop-shadow-sm truncate" style="font-size: clamp(32px, 6vh, 85px);">입장 가능</h2>
                     </div>
                     <p class="font-bold text-emerald-100 drop-shadow-sm text-center w-full" style="font-size: clamp(12px, 2.2vh, 24px);">지금 바로 입장해 주세요!</p>
+                    ${touchCaption}
                 `;
             }
         }
@@ -462,17 +425,11 @@
                 const parts = hash.split('-');
                 if (parts.length >= 2 && parts[0] === 'booth') {
                     window.syncCode = parts[1];
-                    // 만약 해시 라우팅에 'control' 키워드가 들어있으면 로드 즉시 리모컨 모드로 활성화
-                    if (parts[2] === 'control') {
-                        window.currentMode = 'CONTROL';
-                    }
                     const inputEl = document.getElementById('syncCodeInput');
                     if (inputEl) inputEl.value = window.syncCode;
                     return;
                 }
             }
-            // ★ 핵심 수정: 무작위 숫자 대신 기본값 '1'을 고정 할당합니다.
-            // 이로써 전자칠판과 폰 양측에서 URL을 그냥 열면 무조건 1번 방으로 즉각 자동 조인합니다.
             window.syncCode = '1';
             window.location.hash = `booth-${window.syncCode}`;
             const inputEl = document.getElementById('syncCodeInput');
@@ -487,36 +444,16 @@
             if (!code) return;
 
             window.syncCode = code;
-            
-            // 해시값 업데이트하여 주소창 변경
-            const currentHash = window.location.hash.substring(1);
-            const parts = currentHash.split('-');
-            if (parts.length >= 3 && parts[2] === 'control') {
-                window.location.hash = `booth-${code}-control`;
-            } else {
-                window.location.hash = `booth-${code}`;
-            }
+            window.location.hash = `booth-${code}`;
 
             // 새로운 방 번호로 Firestore 동기화 재구독
             subscribeToBoothFirestore();
         };
 
-        // 제어/안내판 뷰 모드 실시간 스위치 토글러
-        window.toggleViewMode = function() {
-            if (window.currentMode === 'DISPLAY') {
-                window.currentMode = 'CONTROL';
-                billboardScreen.classList.add('hidden');
-                controlScreen.classList.remove('hidden');
-                modeButtonText.innerText = "전광판 모드";
-                modeToggleBtn.className = "px-3.5 py-1.5 bg-pink-600 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md hover:bg-pink-700 transition active:scale-95 flex items-center gap-1";
-            } else {
-                window.currentMode = 'DISPLAY';
-                controlScreen.classList.add('hidden');
-                billboardScreen.classList.remove('hidden');
-                modeButtonText.innerText = "리모컨 모드";
-                modeToggleBtn.className = "px-3.5 py-1.5 bg-slate-800 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md hover:bg-slate-700 transition active:scale-95 flex items-center gap-1";
-                updateDisplayPanel();
-            }
+        // ★ 신규 핵심 시스템: 현재 화면에서 직접 알림판 터치(클릭) 시 반대 상태로 토글 및 실시간 동기화
+        window.toggleLocalBoothState = function() {
+            const targetState = window.currentStatus === 'AVAILABLE' ? 'BUSY' : 'AVAILABLE';
+            changeBoothState(targetState);
         };
 
         // RULE 3 COMPLIANT: 인증 처리 선행 후 Firestore 및 상태 관찰 작동 유도
@@ -647,17 +584,7 @@
         // 초기 시작 이벤트 핸들러 바인딩
         window.addEventListener('DOMContentLoaded', () => {
             parseUrlHashAndRun();
-            
-            // 즉시 제어 모드로 로드된 상태인 경우 UI 분기 처리
-            if (window.currentMode === 'CONTROL') {
-                billboardScreen.classList.add('hidden');
-                controlScreen.classList.remove('hidden');
-                modeButtonText.innerText = "전광판 모드";
-                modeToggleBtn.className = "px-3.5 py-1.5 bg-pink-600 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md hover:bg-pink-700 transition active:scale-95 flex items-center gap-1";
-            } else {
-                updateDisplayPanel();
-            }
-            
+            updateDisplayPanel();
             initFirebaseEngine();
         });
     </script>
