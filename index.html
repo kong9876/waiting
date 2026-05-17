@@ -18,7 +18,7 @@
             -webkit-user-select: none;
             user-select: none;
         }
-        /* 촬영 중 깜빡임 애니메이션 */
+        /* 촬영 중일 때 깜빡이는 애니메이션 */
         @keyframes custom-pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.8; transform: scale(0.98); }
@@ -26,7 +26,7 @@
         .animate-custom-pulse {
             animation: custom-pulse 2s infinite ease-in-out;
         }
-        /* 입장 가능 둥실 애니메이션 */
+        /* 입장 가능할 때 둥실거리는 애니메이션 */
         @keyframes gentle-bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
@@ -38,7 +38,7 @@
 </head>
 <body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-3 sm:p-4 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
 
-    <!-- TOP NAVIGATION & CONTROL BAR -->
+    <!-- 상단 네비게이션 및 실시간 관제 상태 바 -->
     <header class="flex justify-between items-center border-b border-slate-200 pb-2 mb-2 z-10 gap-2 shrink-0 w-full">
         <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
             <span class="flex h-3 w-3 relative shrink-0">
@@ -46,16 +46,15 @@
                 <span id="syncIndicatorDot" class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
             </span>
             <h1 class="font-bold text-xs sm:text-sm md:text-base text-slate-700 truncate">📸 네컷사진 관제</h1>
-            <!-- Sync Info Badge -->
+            <!-- 동기화 상태 배지 -->
             <span id="syncBadge" class="text-[9px] sm:text-[10px] md:text-xs bg-emerald-50 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0">
                 <i class="fa-solid fa-signal"></i>
-                <span id="syncBadgeText">실시간 연결됨</span>
+                <span id="syncBadgeText">연결 대기중</span>
             </span>
         </div>
 
-        <!-- Connection and Mode Controls -->
+        <!-- 모드 전환 컨트롤 -->
         <div class="flex items-center gap-1.5 md:gap-2 shrink-0">
-            <!-- Mode Switch Button -->
             <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md transition active:scale-95 flex items-center gap-1">
                 <i class="fa-solid fa-arrows-rotate"></i>
                 <span id="modeButtonText">리모컨 모드</span>
@@ -63,22 +62,22 @@
         </div>
     </header>
 
-    <!-- MAIN VIEWPORT CONTAINER -->
+    <!-- 메인 콘텐츠 영역 (잘림 현상 완전 방지) -->
     <main class="flex-grow flex flex-col justify-start overflow-hidden relative w-full">
 
         <!-- ==========================================
-             VIEW 1: 대기 학생용 전자칠판 전광판 (Display Screen)
+             화면 1: 대기 학생용 전자칠판 전광판 (Display)
              ========================================== -->
         <div id="billboardScreen" class="flex-grow flex flex-col justify-start h-full gap-2 w-full">
             
-            <!-- REAL-TIME BOOTH STATUS DISPLAY (Compact Size) -->
+            <!-- 실시간 상태 알림판 (촬영중 / 입장가능) -->
             <div id="statusContainer" class="rounded-3xl p-3 shadow-xl flex flex-col items-center justify-center text-center border-4 border-white transition-all duration-500 shrink-0 h-[20vh] md:h-[23vh] w-full max-w-full">
                 <div class="text-slate-300">
                     <i class="fa-solid fa-spinner animate-spin text-5xl"></i>
                 </div>
             </div>
 
-            <!-- DECORATION GUIDE TITLE -->
+            <!-- 가이드 타이틀 설명란 -->
             <div class="text-center mt-3 md:mt-4 shrink-0 px-2">
                 <h3 class="font-black text-lg sm:text-2xl md:text-3xl lg:text-4xl text-pink-500 tracking-wide mb-1">
                     🎨 사진 촬영 후! 인생네컷 꾸미기 가이드
@@ -88,12 +87,11 @@
                 </p>
             </div>
 
-            <!-- 4 STEPS GUIDE GRID (Responsive & Safe Margins) -->
+            <!-- 4단계 가이드 가로 그리드 (여백 및 정확한 문구 줄바꿈 구현) -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 flex-grow overflow-hidden pb-2 mt-2 w-full max-w-full px-1">
                 
-                <!-- CARD 1 -->
+                <!-- 1번 카드: 사진 자르기 -->
                 <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container -->
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-rose-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-rose-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="25" y="15" width="40" height="50" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
@@ -108,19 +106,17 @@
                             </g>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-rose-50 text-rose-600 py-1 rounded-lg mb-1 shrink-0">
                         1. 사진 자르기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>마음에 드는 베스트 컷 1장만</span>
                         <span>잘라주세요</span>
                     </p>
                 </div>
 
-                <!-- CARD 2 -->
+                <!-- 2번 카드: 문구 쓰기 -->
                 <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container -->
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-amber-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-amber-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="30" y="10" width="40" height="55" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
@@ -133,20 +129,18 @@
                             </g>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-amber-50 text-amber-600 py-1 rounded-lg mb-1 shrink-0">
                         2. 문구 쓰기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>자른 사진에 네임펜으로</span>
                         <span>오늘의 추억과 메세지를</span>
                         <span>남겨주세요</span>
                     </p>
                 </div>
 
-                <!-- CARD 3 -->
+                <!-- 3번 카드: 창문에 붙이기 -->
                 <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container -->
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-emerald-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-emerald-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="15" y="15" width="70" height="70" rx="4" stroke="#059669" stroke-width="3" fill="#ECFDF5"/>
@@ -158,19 +152,17 @@
                             </g>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-emerald-50 text-emerald-600 py-1 rounded-lg mb-1 shrink-0">
                         3. 창문에 붙이기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>마스킹 테이프를 골라</span>
                         <span>창문에 붙여주세요</span>
                     </p>
                 </div>
 
-                <!-- CARD 4 -->
+                <!-- 4번 카드: 나누어 가지기 -->
                 <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container -->
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-purple-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-purple-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="18" y="25" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(-15 18 25)"/>
@@ -179,11 +171,10 @@
                             <path d="M15 65 C20 62, 28 66, 35 70 M85 65 C80 62, 72 66, 65 70" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-purple-50 text-purple-600 py-1 rounded-lg mb-1 shrink-0">
                         4. 나누어 가지기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>나머지 사진은</span>
                         <span>친구들과 나누어 가지세요</span>
                     </p>
@@ -193,7 +184,7 @@
         </div>
 
         <!-- ==========================================
-             VIEW 2: 안쪽 선생님 제어용 모드 (Teacher Control Screen)
+             화면 2: 안쪽 선생님 제어용 모드 (Control Remote)
              ========================================== -->
         <div id="controlScreen" class="hidden flex-grow flex flex-col justify-center items-center h-full max-w-lg mx-auto px-4 w-full">
             <div class="bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-200 w-full text-center">
@@ -206,7 +197,7 @@
                     안에서 상태 버튼을 누르면 즉시 동기화됩니다.
                 </p>
 
-                <!-- Control Buttons -->
+                <!-- 제어 버튼 목록 -->
                 <div class="flex flex-col gap-4">
                     <button onclick="changeBoothState('BUSY')" class="w-full py-5 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white rounded-2xl text-lg md:text-xl font-extrabold shadow-lg transition duration-150 flex items-center justify-center gap-3">
                         <i class="fa-solid fa-camera animate-pulse"></i>
@@ -229,18 +220,38 @@
 
     </main>
 
-    <!-- Clean, Robust Realtime Synchronization Logic (Zero-Config, Spam-Free Fallbacks) -->
-    <script>
-        // APP STATE variables
+    <!-- 구글 파이어베이스 SDK 모듈 CDN 연결 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // =============================================================
+        // [필수 설정] 파이어베이스에서 받은 고유 설정 정보(Config)를 아래에 채워주세요!
+        // =============================================================
+       const firebaseConfig = {
+          apiKey: "AIzaSyBfqmUo_pUo97TpNsYKvohfelG7kmr_DR4",
+          authDomain: "waiting-65590.firebaseapp.com",
+          projectId: "waiting-65590",
+          storageBucket: "waiting-65590.firebasestorage.app",
+          messagingSenderId: "58647898582",
+          appId: "1:58647898582:web:a07b57e7e9050b25239c77",
+          measurementId: "G-C3TXJREPE3"
+        };
+        // =============================================================
+
+        // APP STATE 전역 관리용 변수
         window.currentMode = 'DISPLAY';
         window.currentStatus = 'AVAILABLE';
         window.syncCode = '123456';
 
-        let sseSource = null;
-        let fallbackPollInterval = null;
-        let lastMsgId = null;
+        let db = null;
+        let auth = null;
+        let appId = 'default-app-id';
+        let currentUser = null;
+        let firebaseUnsubscribe = null;
 
-        // DOM Elements
+        // DOM 요소 제어 변수
         const billboardScreen = document.getElementById('billboardScreen');
         const controlScreen = document.getElementById('controlScreen');
         const modeToggleBtn = document.getElementById('modeToggleBtn');
@@ -251,19 +262,7 @@
         const syncBadgeText = document.getElementById('syncBadgeText');
         const syncBadge = document.getElementById('syncBadge');
 
-        // Same-device Tab Synchronization via BroadcastChannel API (Instant Offline Sync)
-        const localChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('fourcuts_booth_local_sync') : null;
-        if (localChannel) {
-            localChannel.onmessage = (event) => {
-                if (event.data && event.data.syncCode === window.syncCode && event.data.status !== window.currentStatus) {
-                    window.currentStatus = event.data.status;
-                    updateDisplayPanel();
-                    playSound(window.currentStatus);
-                }
-            };
-        }
-
-        // Audio Synth Feedback (Quiet & browser sandboxing compliant)
+        // 상태값 변경 사운드 발생 효과음 (브라우저 자체 신디사이저 활용)
         function playSound(type) {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -298,10 +297,10 @@
                         osc.stop(ctx.currentTime + delay + 0.25);
                     });
                 }
-            } catch (e) { /* quiet fallback */ }
+            } catch (e) { /* quiet */ }
         }
 
-        // Render billboard status display panel
+        // 실시간 전광판 상태 보드 렌더링 함수
         function updateDisplayPanel() {
             if (!statusContainer) return;
 
@@ -326,7 +325,7 @@
             }
         }
 
-        // Initialize and parse URL parameters
+        // 주소창 Hash 방 번호 분석 및 자동 생성
         function parseUrlHashAndRun() {
             const hash = window.location.hash.substring(1);
             if (hash) {
@@ -340,7 +339,7 @@
             window.location.hash = `booth-${window.syncCode}`;
         }
 
-        // Mode Toggler Controls
+        // 제어/안내판 뷰 모드 실시간 스위치 토글러
         window.toggleViewMode = function() {
             if (window.currentMode === 'DISPLAY') {
                 window.currentMode = 'CONTROL';
@@ -358,140 +357,127 @@
             }
         };
 
-        // CONNECT MULTI-DEVICE WORLDWIDE SYNC (Completely config-free, clean error recovery)
-        function initConnection() {
-            if (sseSource) {
-                sseSource.close();
-                sseSource = null;
-            }
-            if (fallbackPollInterval) {
-                clearInterval(fallbackPollInterval);
-                fallbackPollInterval = null;
+        // RULE 3 COMPLIANT: 익명 로그인 먼저 선행 완료 후 데이터 연동
+        const initFirebaseEngine = async () => {
+            let activeConfig = null;
+
+            // 1. 직접 입력한 파이어베이스 Config가 있다면 우선 적용
+            if (myFirebaseConfig.apiKey !== "YOUR_API_KEY") {
+                activeConfig = myFirebaseConfig;
+            } 
+            // 2. 가상 시뮬레이터 환경 내 자동 주입 Config 백업 처리
+            else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    activeConfig = JSON.parse(__firebase_config);
+                } catch(e) {}
             }
 
-            const topic = `fourcuts_booth_public_sync_${window.syncCode}`;
-            updateSyncBadgeUI("connecting");
+            if (!activeConfig) {
+                console.warn("Firebase config is missing.");
+                updateSyncBadgeUI("unconfigured");
+                return;
+            }
 
             try {
-                // Primary: Stream Server-Sent Events (Zero configuration, high-speed)
-                sseSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
-                
-                sseSource.onopen = () => {
-                    updateSyncBadgeUI("connected");
-                };
+                const app = initializeApp(activeConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-                sseSource.onmessage = (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        if (data.event === 'message') {
-                            const newState = data.message;
-                            if ((newState === 'AVAILABLE' || newState === 'BUSY') && newState !== window.currentStatus) {
-                                window.currentStatus = newState;
-                                updateDisplayPanel();
-                                playSound(window.currentStatus);
-                            }
-                        }
-                    } catch (e) { /* silent parse safeguard */ }
-                };
-
-                sseSource.onerror = () => {
-                    // Fail gracefully on educational firewalls. Silently close stream & enter zero-error polling
-                    if (sseSource) {
-                        sseSource.close();
-                        sseSource = null;
-                    }
-                    startSpamFreePolling(topic);
-                };
-            } catch (err) {
-                startSpamFreePolling(topic);
-            }
-        }
-
-        // Low-latency polling back-up without console logs spamming (Strict silent catches)
-        function startSpamFreePolling(topic) {
-            updateSyncBadgeUI("polling");
-
-            fallbackPollInterval = setInterval(async () => {
-                try {
-                    // Polls the single latest state update to maintain low network usage
-                    const response = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=latest`);
-                    if (!response.ok) return;
-
-                    const text = await response.text();
-                    if (!text.trim()) return;
-
-                    const lines = text.trim().split('\n');
-                    const lastLine = lines[lines.length - 1];
-                    if (!lastLine) return;
-
-                    const data = JSON.parse(lastLine);
-                    if (data.event === 'message' && data.id !== lastMsgId) {
-                        lastMsgId = data.id;
-                        const newState = data.message;
-                        if ((newState === 'AVAILABLE' || newState === 'BUSY') && newState !== window.currentStatus) {
-                            window.currentStatus = newState;
-                            updateDisplayPanel();
-                            playSound(window.currentStatus);
-                        }
-                    }
-                } catch (e) {
-                    // SILENT SHIELD: Strictly catch network issues without polluting browser debug log
+                // RULE 3: 익명 사용자 로그인 진행 및 대기
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
                 }
-            }, 2500);
+
+                onAuthStateChanged(auth, (user) => {
+                    currentUser = user;
+                    if (user) {
+                        updateSyncBadgeUI("connected");
+                        // 3단계 로그인 확인 완료 후 실시간 DB 감시 작동
+                        subscribeToBoothFirestore();
+                    } else {
+                        updateSyncBadgeUI("disconnected");
+                    }
+                });
+
+            } catch(e) {
+                console.error("Firebase startup failed:", e);
+                updateSyncBadgeUI("error");
+            }
+        };
+
+        // RULE 1 COMPLIANT: 지정된 샌드박스 Firestore 컬렉션 경로 바인딩 규칙
+        function subscribeToBoothFirestore() {
+            if (!currentUser || !db) return;
+
+            if (firebaseUnsubscribe) firebaseUnsubscribe();
+
+            // RULE 1 경로 지정 준수: /artifacts/{appId}/public/data/{collectionName}/{documentId}
+            const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'booth_state', 'room_' + window.syncCode);
+
+            firebaseUnsubscribe = onSnapshot(roomDocRef, (snap) => {
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data && data.status && data.status !== window.currentStatus) {
+                        window.currentStatus = data.status;
+                        updateDisplayPanel();
+                        playSound(window.currentStatus);
+                    }
+                } else {
+                    // 미존재 문서 공간 즉각 생성 바인딩
+                    setDoc(roomDocRef, { status: window.currentStatus, lastUpdated: Date.now() }, { merge: true })
+                        .catch(() => {});
+                }
+            }, (err) => {
+                console.warn("Firestore snapshot loading error:", err);
+                updateSyncBadgeUI("error");
+            });
         }
 
-        // Push state update across internet + local channels smoothly
+        // 기기 상태 송수신 제어 함수 (RULE 3 의거하여 로그인 보안 가드 상태 검사)
         window.changeBoothState = async function(newState) {
             window.currentStatus = newState;
             updateDisplayPanel();
             playSound(newState);
 
-            // 1. Instantly trigger sync on identical computer tabs
-            if (localChannel) {
-                localChannel.postMessage({ syncCode: window.syncCode, status: newState });
-            }
-
-            // 2. Fallback local backup
-            localStorage.setItem(`fourcuts_booth_state_${window.syncCode}`, newState);
-
-            // 3. Dispatch internet-wide multicast payload
-            const topic = `fourcuts_booth_public_sync_${window.syncCode}`;
-            try {
-                await fetch(`https://ntfy.sh/${topic}`, {
-                    method: 'POST',
-                    body: newState,
-                    headers: { 'Title': 'Booth State Trigger' }
-                });
-            } catch (err) {
-                // Quietly ignore network failures during temporary offlines
+            if (currentUser && db) {
+                // RULE 1 경로 타겟 데이터 실시간 푸시
+                const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'booth_state', 'room_' + window.syncCode);
+                try {
+                    await setDoc(roomDocRef, { status: newState, lastUpdated: Date.now() }, { merge: true });
+                } catch(e) {
+                    console.error("Firestore write failure:", e);
+                }
             }
         };
 
-        // Smooth Connection indicator UI Updater
+        // 실시간 무선 상태 동기화 상태 배지 업데이트 뷰어
         function updateSyncBadgeUI(state) {
             if (state === "connected") {
                 syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
                 syncIndicatorRing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
-                syncBadgeText.innerText = "초고속 실시간 무선 연동됨";
+                syncBadgeText.innerText = "파이어베이스 연결됨";
                 syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-emerald-50 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0";
-            } else if (state === "polling") {
+            } else if (state === "unconfigured") {
                 syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-amber-500";
-                syncIndicatorRing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75";
-                syncBadgeText.innerText = "실시간 연동 가동 중";
-                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-amber-50 text-amber-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-amber-200 flex items-center gap-1 shrink-0";
+                syncIndicatorRing.className = "absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-0";
+                syncBadgeText.innerText = "설정값 입력 대기중";
+                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-amber-50 text-amber-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-amber-200 flex items-center gap-1 shrink-0";
             } else {
-                syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-slate-400 animate-pulse";
-                syncIndicatorRing.className = "absolute inline-flex h-full w-full rounded-full bg-slate-200 opacity-0";
-                syncBadgeText.innerText = "연동 대기 중...";
-                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-slate-100 text-slate-600 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-slate-200 flex items-center gap-1 shrink-0";
+                syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-rose-500 animate-pulse";
+                syncIndicatorRing.className = "absolute inline-flex h-full w-full rounded-full bg-rose-200 opacity-0";
+                syncBadgeText.innerText = "연동 장치 끊김";
+                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-rose-50 text-rose-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-rose-200 flex items-center gap-1 shrink-0";
             }
         }
 
-        // Initialize App on DOM Ready
+        // 초기 시작 이벤트 핸들러 바인딩
         window.addEventListener('DOMContentLoaded', () => {
             parseUrlHashAndRun();
             updateDisplayPanel();
-            initConnection();
+            initFirebaseEngine();
         });
     </script>
 </body>
