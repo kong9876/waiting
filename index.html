@@ -39,23 +39,31 @@
 <body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-3 sm:p-4 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
 
     <!-- 상단 네비게이션 및 실시간 관제 상태 바 -->
-    <header class="flex justify-between items-center border-b border-slate-200 pb-2 mb-2 z-10 gap-2 shrink-0 w-full">
-        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
+    <header class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-2 mb-2 z-10 gap-2 shrink-0 w-full">
+        <div class="flex items-center gap-1.5 min-w-0">
             <span class="flex h-3 w-3 relative shrink-0">
                 <span id="syncIndicatorRing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span id="syncIndicatorDot" class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
             </span>
-            <h1 class="font-bold text-xs sm:text-sm md:text-base text-slate-700 truncate">📸 네컷사진 관제</h1>
+            <h1 class="font-bold text-xs sm:text-sm text-slate-700 truncate">📸 네컷사진 관제</h1>
             <!-- 동기화 상태 배지 -->
-            <span id="syncBadge" class="text-[9px] sm:text-[10px] md:text-xs bg-emerald-50 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0">
-                <i class="fa-solid fa-signal"></i>
+            <span id="syncBadge" class="text-[9px] sm:text-[10px] bg-emerald-50 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-0.5 shrink-0">
+                <i class="fa-solid fa-signal text-[8px]"></i>
                 <span id="syncBadgeText">연결 대기중</span>
             </span>
         </div>
 
-        <!-- 모드 전환 컨트롤 -->
-        <div class="flex items-center gap-1.5 md:gap-2 shrink-0">
-            <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md transition active:scale-95 flex items-center gap-1">
+        <!-- 실시간 무선 연동 컨트롤 영역 (자동 무설정 연결 완료) -->
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0">
+            <!-- 방 번호 입력란 (숨김 설정하되, 비상용으로 작은 텍스트로 보존) -->
+            <div class="hidden items-center gap-1 bg-slate-100 px-2 py-1 rounded-full text-[10px] sm:text-xs border border-slate-200">
+                <span class="text-slate-500 font-bold">채널:</span>
+                <input id="syncCodeInput" type="text" class="w-12 sm:w-16 font-extrabold text-center bg-white border border-slate-300 rounded px-1 py-0.5 focus:outline-none text-slate-800">
+                <button onclick="applyManualSyncCode()" class="bg-indigo-600 text-white px-2 py-0.5 rounded font-bold">이동</button>
+            </div>
+
+            <!-- 모드 전환 버튼 -->
+            <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md transition active:scale-95 flex items-center gap-1 shrink-0">
                 <i class="fa-solid fa-arrows-rotate"></i>
                 <span id="modeButtonText">리모컨 모드</span>
             </button>
@@ -229,21 +237,21 @@
         // =============================================================
         // [필수 설정] 파이어베이스에서 받은 고유 설정 정보(Config)를 아래에 채워주세요!
         // =============================================================
-       const firebaseConfig = {
-          apiKey: "AIzaSyBfqmUo_pUo97TpNsYKvohfelG7kmr_DR4",
-          authDomain: "waiting-65590.firebaseapp.com",
-          projectId: "waiting-65590",
-          storageBucket: "waiting-65590.firebasestorage.app",
-          messagingSenderId: "58647898582",
-          appId: "1:58647898582:web:a07b57e7e9050b25239c77",
-          measurementId: "G-C3TXJREPE3"
+        const myFirebaseConfig = {
+            apiKey: "AIzaSyBfqmUo_pUo97TpNsYKvohfelG7kmr_DR4",
+            authDomain: "waiting-65590.firebaseapp.com",
+            projectId: "waiting-65590",
+            storageBucket: "waiting-65590.firebasestorage.app",
+            messagingSenderId: "58647898582",
+            appId: "1:58647898582:web:a07b57e7e9050b25239c77",
+            measurementId: "G-C3TXJREPE3"
         };
         // =============================================================
 
         // APP STATE 전역 관리용 변수
         window.currentMode = 'DISPLAY';
         window.currentStatus = 'AVAILABLE';
-        window.syncCode = '123456';
+        window.syncCode = '1'; // 기본 고정 채널을 '1'로 설정하여 즉각 자동 연동 유도
 
         let db = null;
         let auth = null;
@@ -330,14 +338,46 @@
             const hash = window.location.hash.substring(1);
             if (hash) {
                 const parts = hash.split('-');
-                if (parts.length === 2 && parts[0] === 'booth') {
+                if (parts.length >= 2 && parts[0] === 'booth') {
                     window.syncCode = parts[1];
+                    // 만약 해시 라우팅에 'control' 키워드가 들어있으면 로드 즉시 리모컨 모드로 활성화
+                    if (parts[2] === 'control') {
+                        window.currentMode = 'CONTROL';
+                    }
+                    const inputEl = document.getElementById('syncCodeInput');
+                    if (inputEl) inputEl.value = window.syncCode;
                     return;
                 }
             }
-            window.syncCode = String(Math.floor(100000 + Math.random() * 900000));
+            // ★ 핵심 수정: 무작위 숫자 대신 기본값 '1'을 고정 할당합니다.
+            // 이로써 전자칠판과 폰 양측에서 URL을 그냥 열면 무조건 1번 방으로 즉각 자동 조인합니다.
+            window.syncCode = '1';
             window.location.hash = `booth-${window.syncCode}`;
+            const inputEl = document.getElementById('syncCodeInput');
+            if (inputEl) inputEl.value = window.syncCode;
         }
+
+        // 수동 방 번호 변경 적용 함수 (선생님이 직접 입력 후 연결할 때)
+        window.applyManualSyncCode = function() {
+            const inputEl = document.getElementById('syncCodeInput');
+            if (!inputEl) return;
+            const code = inputEl.value.trim();
+            if (!code) return;
+
+            window.syncCode = code;
+            
+            // 해시값 업데이트하여 주소창 변경
+            const currentHash = window.location.hash.substring(1);
+            const parts = currentHash.split('-');
+            if (parts.length >= 3 && parts[2] === 'control') {
+                window.location.hash = `booth-${code}-control`;
+            } else {
+                window.location.hash = `booth-${code}`;
+            }
+
+            // 새로운 방 번호로 Firestore 동기화 재구독
+            subscribeToBoothFirestore();
+        };
 
         // 제어/안내판 뷰 모드 실시간 스위치 토글러
         window.toggleViewMode = function() {
@@ -357,7 +397,7 @@
             }
         };
 
-        // RULE 3 COMPLIANT: 익명 로그인 먼저 선행 완료 후 데이터 연동
+        // RULE 3 COMPLIANT: 인증 처리 선행 후 Firestore 및 상태 관찰 작동 유도
         const initFirebaseEngine = async () => {
             let activeConfig = null;
 
@@ -384,10 +424,19 @@
                 db = getFirestore(app);
                 appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-                // RULE 3: 익명 사용자 로그인 진행 및 대기
+                // RULE 3: 커스텀 토큰 로그인 시도 후 에러 발생 시 익명 로그인으로 안전하게 폴백
+                let signedIn = false;
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        signedIn = true;
+                    } catch (tokenError) {
+                        console.warn("Custom token mismatched/failed. Falling back to anonymous sign-in gracefully:", tokenError);
+                    }
+                }
+                
+                // 만약 커스텀 토큰이 실패했거나 없는 경우 익명 로그인을 백업 진행합니다.
+                if (!signedIn) {
                     await signInAnonymously(auth);
                 }
 
@@ -458,25 +507,35 @@
             if (state === "connected") {
                 syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
                 syncIndicatorRing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
-                syncBadgeText.innerText = "파이어베이스 연결됨";
-                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-emerald-50 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0";
+                syncBadgeText.innerText = "실시간 연동됨";
+                syncBadge.className = "text-[9px] sm:text-[10px] bg-emerald-50 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0";
             } else if (state === "unconfigured") {
                 syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-amber-500";
                 syncIndicatorRing.className = "absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-0";
                 syncBadgeText.innerText = "설정값 입력 대기중";
-                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-amber-50 text-amber-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-amber-200 flex items-center gap-1 shrink-0";
+                syncBadge.className = "text-[9px] sm:text-[10px] bg-amber-50 text-amber-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-amber-200 flex items-center gap-1 shrink-0";
             } else {
                 syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-rose-500 animate-pulse";
                 syncIndicatorRing.className = "absolute inline-flex h-full w-full rounded-full bg-rose-200 opacity-0";
                 syncBadgeText.innerText = "연동 장치 끊김";
-                syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-rose-50 text-rose-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-rose-200 flex items-center gap-1 shrink-0";
+                syncBadge.className = "text-[9px] sm:text-[10px] bg-rose-50 text-rose-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-rose-200 flex items-center gap-1 shrink-0";
             }
         }
 
         // 초기 시작 이벤트 핸들러 바인딩
         window.addEventListener('DOMContentLoaded', () => {
             parseUrlHashAndRun();
-            updateDisplayPanel();
+            
+            // 즉시 제어 모드로 로드된 상태인 경우 UI 분기 처리
+            if (window.currentMode === 'CONTROL') {
+                billboardScreen.classList.add('hidden');
+                controlScreen.classList.remove('hidden');
+                modeButtonText.innerText = "전광판 모드";
+                modeToggleBtn.className = "px-2.5 py-1 bg-pink-600 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md hover:bg-pink-700 transition active:scale-95 flex items-center gap-1";
+            } else {
+                updateDisplayPanel();
+            }
+            
             initFirebaseEngine();
         });
     </script>
