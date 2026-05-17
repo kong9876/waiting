@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko" class="h-full">
 <head>
@@ -95,11 +96,11 @@
                 </p>
             </div>
 
-            <!-- 4단계 가이드 가로 그리드 (카드당 구성요소 간격을 좁혀 텍스트 공간 극대화) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 lg:gap-5 flex-grow overflow-hidden pb-3 w-full max-w-full px-1">
+            <!-- 4단계 가이드 가로 그리드 (extra space 발생 시 카드를 무한정 늘리지 않고 중앙에 정렬) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 lg:gap-5 flex-grow content-center overflow-hidden pb-3 w-full max-w-full px-1">
                 
-                <!-- 1번 카드: 사진 자르기 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full transition-all duration-300 min-w-0 gap-2">
+                <!-- 1번 카드: 사진 자르기 (세로 최대 크기를 타이트하게 제약) -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
                     <!-- SVG Image Container (모바일에서 세로 크기를 유연하게 제한) -->
                     <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-rose-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-rose-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +119,7 @@
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-rose-50 text-rose-600 py-1 sm:py-1.5 rounded-lg shrink-0">
                         1. 사진 자르기
                     </h4>
-                    <!-- 상세설명 (불필요한 위아래 여백 없이 중앙정렬 밀착) -->
+                    <!-- 상세설명 (불필요한 빈 여백을 최소화하여 텍스트 크기에 가깝게 정돈) -->
                     <div class="flex-grow flex items-center justify-center min-h-0 py-1">
                         <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-bold leading-normal text-center">
                             <span>마음에 드는 베스트 컷 1장만</span><br>
@@ -128,7 +129,7 @@
                 </div>
 
                 <!-- 2번 카드: 문구 쓰기 -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full transition-all duration-300 min-w-0 gap-2">
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
                     <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-amber-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-amber-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="30" y="10" width="40" height="55" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
@@ -155,7 +156,7 @@
                 </div>
 
                 <!-- 3번 카드: 창문에 붙이기 -->
-                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full transition-all duration-300 min-w-0 gap-2">
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
                     <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-emerald-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-emerald-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="15" y="15" width="70" height="70" rx="4" stroke="#059669" stroke-width="3" fill="#ECFDF5"/>
@@ -180,7 +181,7 @@
                 </div>
 
                 <!-- 4번 카드: 나누어 가지기 -->
-                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full transition-all duration-300 min-w-0 gap-2">
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-100 p-3 sm:p-4 md:p-5 flex flex-col justify-start items-stretch h-full max-h-[240px] sm:max-h-[290px] md:max-h-[320px] lg:max-h-[350px] transition-all duration-300 min-w-0 gap-2 shadow-indigo-50/50">
                     <div class="h-14 sm:h-20 md:h-24 lg:h-28 bg-purple-50 rounded-xl flex items-center justify-center p-2.5 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-purple-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="18" y="25" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(-15 18 25)"/>
