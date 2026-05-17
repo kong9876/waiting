@@ -6,9 +6,9 @@
     <title>인생네컷 부스 실시간 안내판</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Gowun Dodum -->
+    <!-- Google 폰트: 고운돋움 및 Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
             -webkit-user-select: none;
             user-select: none;
         }
-        /* Custom animation for blinking light */
+        /* 촬영 중일 때 미세하게 깜빡이는 효과 */
         @keyframes custom-pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.8; transform: scale(0.98); }
@@ -26,7 +26,7 @@
         .animate-custom-pulse {
             animation: custom-pulse 2s infinite ease-in-out;
         }
-        /* Bounce animation for open door */
+        /* 입장 가능할 때 위아래로 부드럽게 움직이는 효과 */
         @keyframes gentle-bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
@@ -38,7 +38,7 @@
 </head>
 <body class="h-screen max-h-screen overflow-hidden bg-slate-50 flex flex-col p-3 sm:p-4 md:p-6 text-slate-800 w-full max-w-full overflow-x-hidden">
 
-    <!-- TOP NAVIGATION & CONTROL BAR -->
+    <!-- 상단 네비게이션 및 관제 바 -->
     <header class="flex justify-between items-center border-b border-slate-200 pb-2 mb-2 z-10 gap-2 shrink-0 w-full">
         <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
             <span class="flex h-3 w-3 relative shrink-0">
@@ -46,14 +46,13 @@
                 <span id="syncIndicatorDot" class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
             </span>
             <h1 class="font-bold text-xs sm:text-sm md:text-base text-slate-700 truncate">📸 네컷사진 관제</h1>
-            <!-- Sync Info Badge -->
             <span id="syncBadge" class="text-[9px] sm:text-[10px] md:text-xs bg-emerald-50 text-emerald-700 px-1.5 sm:px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0">
                 <i class="fa-solid fa-signal"></i>
                 <span class="hidden xs:inline">실시간 연결됨</span>
             </span>
         </div>
 
-        <!-- Mode Switch Button -->
+        <!-- 모드 전환 버튼 -->
         <div class="flex items-center gap-1.5 md:gap-2 shrink-0">
             <button id="modeToggleBtn" onclick="toggleViewMode()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-full text-[10px] sm:text-xs font-bold shadow-md transition active:scale-95 flex items-center gap-1">
                 <i class="fa-solid fa-arrows-rotate"></i>
@@ -62,24 +61,21 @@
         </div>
     </header>
 
-    <!-- MAIN VIEWPORT CONTAINER -->
+    <!-- 메인 뷰포트 영역 -->
     <main class="flex-grow flex flex-col justify-start overflow-hidden relative w-full">
 
-        <!-- ==========================================
-             VIEW 1: 대기 학생용 전자칠판 전광판 (Display Screen)
-             ========================================== -->
+        <!-- 화면 1: 대기 학생용 전자칠판 전광판 (Display) -->
         <div id="billboardScreen" class="flex-grow flex flex-col justify-start h-full gap-2 w-full">
             
-            <!-- REAL-TIME BOOTH STATUS DISPLAY (Compact Size) -->
+            <!-- 실시간 부스 상태 알림판 -->
             <div id="statusContainer" class="rounded-3xl p-3 shadow-xl flex flex-col items-center justify-center text-center border-4 border-white transition-all duration-500 shrink-0 h-[20vh] md:h-[23vh] w-full max-w-full">
-                <!-- Dynamic Content injected via JS -->
                 <div class="text-slate-300">
                     <i class="fa-solid fa-spinner animate-spin text-5xl"></i>
                 </div>
             </div>
 
-            <!-- DECORATION GUIDE TITLE (Highly Visible with Top Spacing) -->
-            <div class="text-center mt-3 md:mt-5 shrink-0">
+            <!-- 하단 타이틀 설명 (가로 잘림 방지를 위해 마진 최적화) -->
+            <div class="text-center mt-3 md:mt-5 shrink-0 px-2">
                 <h3 class="font-black text-lg sm:text-2xl md:text-3xl lg:text-4xl text-pink-500 tracking-wide mb-1">
                     🎨 사진 촬영 후! 인생네컷 꾸미기 가이드
                 </h3>
@@ -88,12 +84,11 @@
                 </p>
             </div>
 
-            <!-- 4 STEPS GUIDE GRID -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 flex-grow overflow-hidden pb-2 mt-2 w-full max-w-full">
+            <!-- 4단계 가이드 그리드 레이아웃 (오른쪽 잘림 방지 패딩 보완) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 flex-grow overflow-hidden pb-2 mt-2 w-full max-w-full px-1">
                 
-                <!-- CARD 1 -->
-                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2.5 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container (Responsive Scale) -->
+                <!-- 1단계 카드 -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-rose-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-rose-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="25" y="15" width="40" height="50" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
@@ -108,19 +103,17 @@
                             </g>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-rose-50 text-rose-600 py-1 rounded-lg mb-1 shrink-0">
                         1. 사진 자르기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>마음에 드는 베스트 컷 1장만</span>
                         <span>잘라주세요</span>
                     </p>
                 </div>
 
-                <!-- CARD 2 -->
-                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2.5 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container (Responsive Scale) -->
+                <!-- 2단계 카드 (요청하신 정확한 3줄 레이아웃) -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-amber-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-amber-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="30" y="10" width="40" height="55" rx="3" fill="white" stroke="currentColor" stroke-width="3"/>
@@ -133,20 +126,18 @@
                             </g>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-amber-50 text-amber-600 py-1 rounded-lg mb-1 shrink-0">
                         2. 문구 쓰기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>자른 사진에 네임펜으로</span>
                         <span>오늘의 추억과 메세지를</span>
                         <span>남겨주세요</span>
                     </p>
                 </div>
 
-                <!-- CARD 3 -->
-                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2.5 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container (Responsive Scale) -->
+                <!-- 3단계 카드 (교실 창문 -> 창문 수정본) -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-emerald-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-emerald-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="15" y="15" width="70" height="70" rx="4" stroke="#059669" stroke-width="3" fill="#ECFDF5"/>
@@ -158,19 +149,17 @@
                             </g>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-emerald-50 text-emerald-600 py-1 rounded-lg mb-1 shrink-0">
                         3. 창문에 붙이기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>마스킹 테이프를 골라</span>
                         <span>창문에 붙여주세요</span>
                     </p>
                 </div>
 
-                <!-- CARD 4 -->
-                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2.5 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
-                    <!-- SVG Image Container (Responsive Scale) -->
+                <!-- 4단계 카드 -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-100 p-2 sm:p-4 lg:p-5 flex flex-col h-full hover:shadow-lg transition-shadow duration-300 min-w-0">
                     <div class="h-16 sm:h-20 md:h-24 lg:h-28 bg-purple-50 rounded-xl flex items-center justify-center p-2 mb-2 shrink-0 overflow-hidden">
                         <svg class="w-full h-full text-purple-500 max-h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="18" y="25" width="25" height="35" rx="2" fill="white" stroke="#7C3AED" stroke-width="2" transform="rotate(-15 18 25)"/>
@@ -179,11 +168,10 @@
                             <path d="M15 65 C20 62, 28 66, 35 70 M85 65 C80 62, 72 66, 65 70" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <!-- Title & Content -->
                     <h4 class="text-[10px] sm:text-xs md:text-sm lg:text-base font-black text-center bg-purple-50 text-purple-600 py-1 rounded-lg mb-1 shrink-0">
                         4. 나누어 가지기
                     </h4>
-                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center">
+                    <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-slate-800 font-black leading-snug text-center mt-1 flex-grow flex flex-col justify-center gap-0.5">
                         <span>나머지 사진은</span>
                         <span>친구들과 나누어 가지세요</span>
                     </p>
@@ -192,9 +180,7 @@
             
         </div>
 
-        <!-- ==========================================
-             VIEW 2: 안쪽 선생님 제어용 모드 (Teacher Control Screen)
-             ========================================== -->
+        <!-- 화면 2: 안쪽 선생님 제어용 리모컨 모드 (Controller) -->
         <div id="controlScreen" class="hidden flex-grow flex flex-col justify-center items-center h-full max-w-lg mx-auto px-4 w-full">
             <div class="bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-200 w-full text-center">
                 <div class="inline-flex p-3 bg-indigo-50 text-indigo-600 rounded-full mb-3">
@@ -206,14 +192,12 @@
                     안에서 상태 버튼을 누르면 즉시 동기화됩니다.
                 </p>
 
-                <!-- Control Buttons -->
+                <!-- 상태 제어 버튼 세트 -->
                 <div class="flex flex-col gap-4">
-                    <!-- Trigger Busy -->
                     <button onclick="changeBoothState('BUSY')" class="w-full py-5 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white rounded-2xl text-lg md:text-xl font-extrabold shadow-lg transition duration-150 flex items-center justify-center gap-3">
                         <i class="fa-solid fa-camera animate-pulse"></i>
                         <span>지금은 촬영 중 (진입 불가)</span>
                     </button>
-                    <!-- Trigger Available -->
                     <button onclick="changeBoothState('AVAILABLE')" class="w-full py-5 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white rounded-2xl text-lg md:text-xl font-extrabold shadow-lg transition duration-150 flex items-center justify-center gap-3">
                         <i class="fa-solid fa-door-open"></i>
                         <span>부스 비어있음 (입장 가능)</span>
@@ -223,7 +207,7 @@
                 <div class="mt-6 text-xs text-slate-400 flex flex-col items-center gap-1 bg-slate-50 py-3 rounded-xl border border-slate-100">
                     <div class="flex items-center gap-2">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                        <span class="font-bold">무선 네트워크 실시간 동기화 완료</span>
+                        <span class="font-bold">무선 네트워크 실시간 동기화 채널 작동중</span>
                     </div>
                 </div>
             </div>
@@ -231,15 +215,13 @@
 
     </main>
 
-    <!-- JAVASCRIPT LOGIC AND LOCAL + INTERNET SYNCHRONIZATION -->
     <script>
-        // STATE STORAGE
-        let currentMode = 'DISPLAY'; // 'DISPLAY' or 'CONTROL'
-        let currentStatus = 'AVAILABLE'; // 'AVAILABLE' or 'BUSY'
-        let syncCode = '1234'; // Unique room sync code
-        let pollIntervalId = null; 
+        let currentMode = 'DISPLAY'; 
+        let currentStatus = 'AVAILABLE'; 
+        let syncCode = '123456'; 
+        let eventSourceInstance = null;
+        let pollIntervalId = null;
         
-        // DOM ELEMENTS
         const billboardScreen = document.getElementById('billboardScreen');
         const controlScreen = document.getElementById('controlScreen');
         const modeToggleBtn = document.getElementById('modeToggleBtn');
@@ -249,7 +231,7 @@
         const syncIndicatorRing = document.getElementById('syncIndicatorRing');
         const syncBadge = document.getElementById('syncBadge');
 
-        // AUDIO SYSTEM (Browser Synth)
+        // 상태 전환 효과음 (웹 내장 오디오 신디사이저 사용)
         function playSound(type) {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -257,112 +239,114 @@
                 const ctx = new AudioContext();
                 
                 if (type === 'AVAILABLE') {
+                    // 맑은 차임벨 효과음
                     const notes = [293.66, 392.00, 587.33];
                     notes.forEach((freq, idx) => {
                         const osc = ctx.createOscillator();
                         const gain = ctx.createGain();
                         osc.connect(gain);
                         gain.connect(ctx.destination);
-                        
                         osc.type = 'sine';
                         osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.15);
-                        
                         gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.15);
                         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.15 + 0.4);
-                        
                         osc.start(ctx.currentTime + idx * 0.15);
                         osc.stop(ctx.currentTime + idx * 0.15 + 0.4);
                     });
                 } else if (type === 'BUSY') {
+                    // 경고음 효과음
                     [0, 0.15].forEach((delay) => {
                         const osc = ctx.createOscillator();
                         const gain = ctx.createGain();
                         osc.connect(gain);
                         gain.connect(ctx.destination);
-                        
                         osc.type = 'triangle';
                         osc.frequency.setValueAtTime(330, ctx.currentTime + delay);
-                        
                         gain.gain.setValueAtTime(0.12, ctx.currentTime + delay);
                         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.25);
-                        
                         osc.start(ctx.currentTime + delay);
                         osc.stop(ctx.currentTime + delay + 0.25);
                     });
                 }
-            } catch (e) {
-                console.log("Audio play blocked or unsupported:", e);
-            }
+            } catch (e) { console.log("Audio play blocked by browser sandbox policy."); }
         }
 
-        // INTERNET REAL-TIME SYNCHRONIZATION VIA NTFY.SH
+        // SSE (Server-Sent Events) 초고속 실시간 무선 연동
         function connectRealtimeSync() {
-            if (pollIntervalId) {
-                clearInterval(pollIntervalId);
-            }
+            if (eventSourceInstance) eventSourceInstance.close();
+            if (pollIntervalId) clearInterval(pollIntervalId);
 
-            const topic = `fourcuts_booth_remote_sync_${syncCode}`;
+            const topic = `fourcuts_booth_sse_sync_${syncCode}`;
             
             syncIndicatorDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
             syncIndicatorRing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
-            syncBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i><span class="hidden xs:inline">자동 무선 연결됨</span>`;
-            syncBadge.className = "text-[9px] sm:text-[10px] md:text-xs bg-emerald-50 text-emerald-700 px-1.5 sm:px-2.5 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1 shrink-0";
+            syncBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i><span class="hidden xs:inline">초고속 실시간 연결</span>`;
 
-            let lastMessageId = null;
-
-            async function pollLatestState() {
-                try {
-                    const response = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=latest`);
-                    if (!response.ok) return;
-
-                    const text = await response.text();
-                    const lines = text.trim().split('\n');
-
-                    for (let i = lines.length - 1; i >= 0; i--) {
-                        if (!lines[i].trim()) continue;
-                        const data = JSON.parse(lines[i]);
-
-                        if (data.event === 'message' && data.id !== lastMessageId) {
-                            lastMessageId = data.id;
-                            const newState = data.message;
-                            if ((newState === 'AVAILABLE' || newState === 'BUSY') && newState !== currentStatus) {
-                                currentStatus = newState;
-                                updateDisplayPanel();
-                                playSound(newState);
-                            }
-                            break;
+            try {
+                // ntfy 서버에 sse 통신 스트림 개방
+                eventSourceInstance = new EventSource(`https://ntfy.sh/${topic}/sse`);
+                
+                eventSourceInstance.onmessage = (e) => {
+                    const data = JSON.parse(e.data);
+                    if (data.event === 'message') {
+                        const newState = data.message;
+                        if ((newState === 'AVAILABLE' || newState === 'BUSY') && newState !== currentStatus) {
+                            currentStatus = newState;
+                            updateDisplayPanel();
+                            playSound(newState);
                         }
                     }
-                } catch (e) {
-                    console.warn("Polling connection retry...", e);
-                }
-            }
+                };
 
-            pollLatestState();
-            pollIntervalId = setInterval(pollLatestState, 1500); // 1.5s refresh for quick response
+                eventSourceInstance.onerror = () => {
+                    // 학교 보안망 등에서 SSE가 차단당한 경우 백업 폴링(Polling) 방식으로 자동 긴급 전환
+                    eventSourceInstance.close();
+                    startLightweightPolling(topic);
+                };
+            } catch (err) {
+                startLightweightPolling(topic);
+            }
         }
 
-        // TRIGGER STATE CHANGE (Publish update)
+        // 백업 통신 시스템 (1.5초 간격 경량 동기화)
+        function startLightweightPolling(topic) {
+            pollIntervalId = setInterval(async () => {
+                try {
+                    const response = await fetch(`https://ntfy.sh/${topic}/json`);
+                    if (!response.ok) return;
+                    const text = await response.text();
+                    const lines = text.trim().split('\n').filter(Boolean);
+                    if (lines.length === 0) return;
+                    
+                    const lastLine = JSON.parse(lines[lines.length - 1]);
+                    if (lastLine.event === 'message') {
+                        const newState = lastLine.message;
+                        if ((newState === 'AVAILABLE' || newState === 'BUSY') && newState !== currentStatus) {
+                            currentStatus = newState;
+                            updateDisplayPanel();
+                            playSound(newState);
+                        }
+                    }
+                } catch (e) { console.error("Sync backup polling active."); }
+            }, 1500);
+        }
+
+        // 상태값 발행 (리모컨 -> 전광판 데이터 송신)
         async function changeBoothState(newState) {
             currentStatus = newState;
             updateDisplayPanel();
             playSound(newState);
 
-            const topic = `fourcuts_booth_remote_sync_${syncCode}`;
+            const topic = `fourcuts_booth_sse_sync_${syncCode}`;
             try {
                 await fetch(`https://ntfy.sh/${topic}`, {
                     method: 'POST',
-                    body: newState,
-                    headers: {
-                        'Title': 'Booth State Trigger'
-                    }
+                    body: newState
                 });
-            } catch (error) {
-                console.error("Remote Sync Network Error:", error);
-            }
+            } catch (error) { console.error("Data push error:", error); }
         }
 
-        // RENDER METHOD FOR DISPLAY SCREEN
+        // 상태판 화면 디자인 렌더링
         function updateDisplayPanel() {
             if (!statusContainer) return;
 
@@ -387,7 +371,7 @@
             }
         }
 
-        // PARSE URL HASH ON BOOT
+        // 주소창(Hash URL) 파싱 및 고유 세션 할당
         function parseUrlHashAndRun() {
             const hash = window.location.hash.substring(1);
             if (hash) {
@@ -397,20 +381,12 @@
                     return;
                 }
             }
-            
-            // Generate a random room ID and append to URL so other devices can just copy the link
+            // 해시태그가 없을 경우 고유 세션 난수 생성 후 URL 부여
             syncCode = String(Math.floor(100000 + Math.random() * 900000));
             window.location.hash = `booth-${syncCode}`;
         }
 
-        // INITIALIZE ALL SYSTEM ON LOAD
-        function initSyncSystem() {
-            parseUrlHashAndRun();
-            updateDisplayPanel();
-            connectRealtimeSync();
-        }
-
-        // VIEW MODE TOGGLE
+        // 화면 뷰 제어 모드 스위치
         function toggleViewMode() {
             if (currentMode === 'DISPLAY') {
                 currentMode = 'CONTROL';
@@ -429,7 +405,9 @@
         }
 
         window.onload = function () {
-            initSyncSystem();
+            parseUrlHashAndRun();
+            updateDisplayPanel();
+            connectRealtimeSync();
         };
     </script>
 </body>
